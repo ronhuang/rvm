@@ -21,6 +21,16 @@ typedef Bit32s Bits;
 #define NULL (void *)0
 #endif
 
+/* Define SUCCESS */
+#ifndef SUCCESS
+#define SUCCESS 1
+#endif
+
+/* Define FAIL */
+#ifndef FAIL
+#define FAIL 0
+#endif
+
 
 #if 0
 /* Recommended structure for IA-32 instruction. */

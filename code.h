@@ -32,7 +32,7 @@ int rvm_code_set_source(rvm_code *reader, const char *source);
 /**
  * Read code
  */
-Bit8u rvm_code_read(rvm_code *reader);
+int rvm_code_read(rvm_code *reader, Bit8u *code);
 
 
 #endif /* __CODE_H__ */
