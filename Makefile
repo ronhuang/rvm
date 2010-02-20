@@ -1,7 +1,7 @@
 # Makefile for rvm
 
-OBJS = code.o
-TEST_OBJS = test_code.o test_type.o
+OBJS = code.o decode.o
+TEST_OBJS = test_type.o test_code.o test_decode.o
 CC = gcc
 CFLAGS += -m32
 

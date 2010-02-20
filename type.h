@@ -2,8 +2,8 @@
 #define __TYPE_H__
 
 
-/* Standard data types used */
-/* Borrowed from DOSBox. */
+/** Standard data types used */
+/** Borrowed from DOSBox. */
 typedef unsigned char Bit8u;
 typedef signed char Bit8s;
 typedef unsigned short Bit16u;
@@ -16,20 +16,26 @@ typedef Bit32u Bitu;
 typedef Bit32s Bits;
 
 
-/* Define NULL */
+/** Define NULL */
 #ifndef NULL
 #define NULL (void *)0
 #endif
 
-/* Define SUCCESS */
+/** Define SUCCESS */
 #ifndef SUCCESS
 #define SUCCESS 1
 #endif
 
-/* Define FAIL */
+/** Define FAIL */
 #ifndef FAIL
 #define FAIL 0
 #endif
+
+
+/** Define instruction */
+typedef struct rvm_inst_t {
+  
+} rvm_inst;
 
 
 #if 0
