@@ -1,3 +1,8 @@
+/**
+ * Actual implementation for code reader.
+ */
+
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -5,6 +10,7 @@
 #include "code.h"
 
 
+/** Maximum length for the buffer.  */
 #define MAX_BUFFER_LENGTH 256
 
 
@@ -23,7 +29,8 @@ struct rvm_code_t {
 
 
 /**
- * Constructor
+ * Constructor.
+ * \return The instance of the code reader.
  */
 rvm_code *rvm_code_new(void) {
   rvm_code *reader = malloc(sizeof(rvm_code));
@@ -43,7 +50,8 @@ rvm_code *rvm_code_new(void) {
 
 
 /**
- * Destructor
+ * Destructor.
+ * \param [in] reader an instance of the code reader.
  */
 void rvm_code_finalize(rvm_code *reader) {
   if (!reader) {
@@ -66,7 +74,10 @@ void rvm_code_finalize(rvm_code *reader) {
 
 
 /**
- * Set source for code reader
+ * Set source for code reader.
+ * \param [in] reader an instance of the code reader.
+ * \param [in] source filename to file containing the code.
+ * \return SUCCESS if the source is successfully set, otherwise FAIL.
  */
 int rvm_code_set_source(rvm_code *reader, const char *source) {
   if (!reader || !source) {
@@ -89,7 +100,10 @@ int rvm_code_set_source(rvm_code *reader, const char *source) {
 
 
 /**
- * Read code
+ * Read a byte of code from the source.
+ * \param [in] reader an instance of the code reader.
+ * \param [out] code to store the read code.
+ * \return SUCCESS if reads a byte from source, otherwise FAIL.
  */
 int rvm_code_read(rvm_code *reader, Bit8u *code) {
   char raw[3];
