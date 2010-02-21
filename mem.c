@@ -10,6 +10,15 @@ struct rvm_mem_t {
 
 
 /**
+ * Reset memory.
+ * \return SUCCESS if reads a byte from source, otherwise FAIL.
+ */
+int rvm_mem_reset(void) {
+  return FAIL;
+}
+
+
+/**
  * Save content of the field (Bit32u) to memory.
  * \param address the address of the memory to save to.
  * \param field the field containing the data to save.

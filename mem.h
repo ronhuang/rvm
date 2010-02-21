@@ -5,6 +5,12 @@
 
 
 /**
+ * Reset memory.
+ */
+int rvm_mem_reset(void);
+
+
+/**
  * Save content of the field (Bit32u) to memory.
  * \param address the address of the memory to save to.
  * \param field the field containing the data to save.

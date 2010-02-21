@@ -133,7 +133,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     rm = modrm & 0x07;
 
     /* Look up effective address  */
-    if (mod < 0x11) { /* Applies to only mod with 0x00, 0x01, 0x10. */
+    if (mod < 0x03) { /* Applies to only mod with 0x00, 0x01, 0x02. */
       switch ((mod << 3) | rm) {
       case 0x0c:
         /* [--][--]+disp8 */
@@ -190,7 +190,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
       if (!rvm_code_read8s(rd, &disp8)) return FAIL;
       op2.d = disp8;
       /* First operand. */
-      if (mod == 0x11) op1.d = CPU.gregs[rm].d; /* General register. */
+      if (mod == 0x03) op1.d = CPU.gregs[rm].d; /* General register. */
       else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
       break;
 
@@ -237,7 +237,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     break;
 
   case S_Ed:
-    if (mod == 0x11) CPU.gregs[reg].d = op1.d; /* Register. */
+    if (mod == 0x03) CPU.gregs[reg].d = op1.d; /* Register. */
     else rvm_mem_save32u(offset, op1.d); /* Effective address memory. */
     break;
 
