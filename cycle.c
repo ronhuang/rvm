@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#define NDEBUG
 #include <assert.h>
 #include "cycle.h"
 #include "code.h"
