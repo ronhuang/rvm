@@ -137,4 +137,28 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     fct_chk_eq_int(code, 0x5d);
   } FCT_TEST_END();
 
+  FCT_TEST_BGN(test_read_multi_bytes) {
+    union {
+      Bit8u b;
+      Bit8s bs;
+      Bit16u w;
+      Bit16s ws;
+      Bit32u d;
+      Bit32s ds;
+    } code;
+    int ret;
+
+    /* Otherwise no point in testing further! */
+    fct_req(reader != NULL);
+
+    ret = rvm_code_set_source(reader, "test/code_multi_bytes");
+    fct_req(ret == SUCCESS);
+
+    rvm_code_read8s(reader, &code.bs);
+    fct_chk_eq_int(code.bs, -16);
+
+    rvm_code_read32u(reader, &code.d);
+    fct_chk_eq_int(code.d, 0xFEEDBEEF);
+  } FCT_TEST_END();
+
 } FCTMF_FIXTURE_SUITE_END();

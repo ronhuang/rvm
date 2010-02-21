@@ -100,7 +100,7 @@ int rvm_code_set_source(rvm_code *reader, const char *source) {
 
 
 /**
- * Read a byte of code from the source.
+ * Read a byte (Bit8u) of code from the source.
  * \param [in] reader an instance of the code reader.
  * \param [out] code to store the read code.
  * \return SUCCESS if reads a byte from source, otherwise FAIL.
@@ -156,5 +156,50 @@ int rvm_code_read(rvm_code *reader, Bit8u *code) {
   }
 
   *code = (Bit8u)strtol(raw, NULL, 16);
+  return SUCCESS;
+}
+
+
+/**
+ * Read a Bit8s of code from the source.
+ * \param [in] reader an instance of the code reader.
+ * \param [out] code to store the read code.
+ * \return SUCCESS if reads a byte from source, otherwise FAIL.
+ */
+int rvm_code_read8s(rvm_code *reader, Bit8s *code) {
+  Bit8u p0;
+
+  if (!reader || !code) {
+    return FAIL;
+  }
+
+  if (!rvm_code_read(reader, &p0)) return FAIL;
+  *code = (Bit8s)p0;
+
+  return SUCCESS;
+}
+
+
+/**
+ * Read a Bit32u of code from the source.
+ * \param [in] reader an instance of the code reader.
+ * \param [out] code to store the read code.
+ * \return SUCCESS if reads a byte from source, otherwise FAIL.
+ */
+int rvm_code_read32u(rvm_code *reader, Bit32u *code) {
+  Bit8u p0, p1, p2, p3;
+
+  if (!reader || !code) {
+    return FAIL;
+  }
+
+  if (!rvm_code_read(reader, &p0)) return FAIL;
+  if (!rvm_code_read(reader, &p1)) return FAIL;
+  if (!rvm_code_read(reader, &p2)) return FAIL;
+  if (!rvm_code_read(reader, &p3)) return FAIL;
+
+  /* Little-endian */
+  *code = (p3 << 24) | (p2 << 16) | (p1 << 8) | p0;
+
   return SUCCESS;
 }
