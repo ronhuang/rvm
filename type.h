@@ -32,14 +32,17 @@ typedef Bit32s Bits;
 #endif
 
 
-/** Define instruction */
-typedef struct rvm_inst_t {
-} rvm_inst;
-
-
 /** Define field in micro instruction */
 enum {
   L_MODRM
+};
+
+enum {
+  S_Gd
+};
+
+enum {
+  M_EA
 };
 
 /** Define micro instruction */
@@ -48,7 +51,14 @@ typedef struct rvm_micro_t {
   int process;
   int save;
   int extra;
+  const char mnemonic[16];
 } rvm_micro;
+
+
+/** Define instruction */
+typedef struct rvm_inst_t {
+  const char *mnemonic;
+} rvm_inst;
 
 
 #if 0

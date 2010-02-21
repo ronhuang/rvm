@@ -23,11 +23,15 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
     reader = NULL;
   } FCT_TEARDOWN_END();
 
-  FCT_TEST_BGN(test_step) {
+  FCT_TEST_BGN(test_step_mnemonic) {
     int result;
+    rvm_inst inst;
 
     result = rvm_cycle_step(runner);
     fct_req(result == SUCCESS);
+
+    rvm_cycle_get_executed_instruction(runner, &inst);
+    fct_chk_eq_str(inst.mnemonic, "lea");
   } FCT_TEST_END();
 
 } FCTMF_FIXTURE_SUITE_END();

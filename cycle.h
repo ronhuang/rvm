@@ -39,4 +39,12 @@ int rvm_cycle_set_code(rvm_cycle *runner, rvm_code *reader);
  */
 int rvm_cycle_step(rvm_cycle *runner);
 
+/**
+ * Retrieve the instruction just executed.
+ * \param [in] runner an instance of the instruction runner.
+ * \param [out] inst an instance of the instruction.
+ * \return SUCCESS if cycles an instruction, otherwise FAIL.
+ */
+int rvm_cycle_get_executed_instruction(rvm_cycle *runner, rvm_inst *inst);
+
 #endif /* __CYCLE_H__ */
