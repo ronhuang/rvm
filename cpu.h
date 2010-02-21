@@ -52,5 +52,32 @@ extern struct rvm_cpu_t CPU;
 #define reg_esi CPU.gregs[REG_SI].d
 #define reg_edi CPU.gregs[REG_DI].d
 
+#define reg_eip CPU.ip.d
+
+#define reg_cs CPU.sregs[REG_CS]
+#define reg_ss CPU.sregs[REG_SS]
+#define reg_ds CPU.sregs[REG_DS]
+#define reg_es CPU.sregs[REG_ES]
+#define reg_fs CPU.sregs[REG_FS]
+#define reg_gs CPU.sregs[REG_GS]
+
+
+/**
+ * Reset the CPU.
+ * \return SUCCESS if the source is successfully set, otherwise FAIL.
+ */
+int rvm_cpu_reset(void);
+
+
+/**
+ * Stack manipulation functions
+ */
+/**
+ * Push field (Bit32u) onto stack.
+ * \param [in] field the data to be pushed.
+ * \return SUCCESS if the source is successfully set, otherwise FAIL.
+ */
+int rvm_cpu_push32u(Bit32u field);
+
 
 #endif /* __CPU_H__ */

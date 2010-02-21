@@ -1,7 +1,7 @@
 # Makefile for rvm
 
 OBJS = code.o cycle.o cpu.o mem.o
-TEST_OBJS = test_type.o test_code.o test_cycle.o
+TEST_OBJS = test_type.o test_code.o test_cycle.o test_cpu.o
 CC = gcc
 CFLAGS += -m32
 
@@ -12,7 +12,6 @@ all: rvm
 
 .PHONY: test
 test: test_rvm
-	./test_rvm
 
 
 rvm: $(OBJS) rvm.o
