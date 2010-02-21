@@ -201,6 +201,13 @@ int rvm_cycle_step(rvm_cycle *runner) {
     }
     break;
 
+ case L_REG:
+   op1.d = CPU.gregs[micro.extra].d;
+   break;
+
+ case L_NOP:
+    break;
+
   default:
     /* Unsupported instruction */
     assert(0);
@@ -214,8 +221,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
     /* FIXME: set flags. */
     break;
 
-    /* Unsupported instruction */
+  case P_NOP:
+    break;
+
   default:
+    /* Unsupported instruction */
     assert(0);
     return FAIL;
   }
@@ -229,6 +239,13 @@ int rvm_cycle_step(rvm_cycle *runner) {
   case S_Ed:
     if (mod == 0x11) CPU.gregs[reg].d = op1.d; /* Register. */
     else rvm_mem_save32u(offset, op1.d); /* Effective address memory. */
+    break;
+
+  case S_PUSH: /* Push operand to stack. */
+    rvm_cpu_push32u(op1.d);
+    break;
+
+  case S_NOP:
     break;
 
   default:

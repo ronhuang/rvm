@@ -35,17 +35,22 @@ typedef Bit32s Bits;
 /** Define field in micro instruction */
 /* Load field. */
 enum {
-  L_MODRM,       /** Check ModR/M. */
+  L_NOP = 0,     /** Skip this. */
+  L_MODRM,       /** Operands are in ModR/M. */
+  L_REG,         /** Operands are in opcode. */
 };
 
 /* Save field. */
 enum {
+  S_NOP = 0,     /** Skip this. */
   S_Gd,          /** General register (dword). */
   S_Ed,          /** Register or memory (dword). */
+  S_PUSH,        /** Push data to stack. */
 };
 
 /* Extra field. */
 enum {
+  M_EMPTY = 0,   /** Empty. */
   M_EA,          /** Effective address. */
   M_EdIb,        /** Register or memory, followed by immediate data. */
   M_GRP,         /** Opcode extension group. */
@@ -53,7 +58,7 @@ enum {
 
 /* Process field. */
 enum {
-  P_LEA,         /** Load effective address. */
+  P_NOP = 0,     /** Skip this. */
   P_AND,         /** Logical AND. */
 };
 

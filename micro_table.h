@@ -2,6 +2,7 @@
 #define __MICRO_TABLE_H__
 
 #include "type.h"
+#include "cpu.h"
 
 rvm_micro rvm_micro_table[] = {
   /* 0x00 ~ 0x07 */
@@ -100,7 +101,7 @@ rvm_micro rvm_micro_table[] = {
   {0            ,0          ,0      ,0      },
 
   /* 0x50 ~ 0x57 */
-  {0            ,0          ,0      ,0      },
+  {L_REG        ,0          ,S_PUSH ,REG_AX ,"push"       },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
