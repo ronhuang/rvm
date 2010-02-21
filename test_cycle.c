@@ -23,7 +23,7 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
     reader = NULL;
   } FCT_TEARDOWN_END();
 
-  FCT_TEST_BGN(test_step_mnemonic) {
+  FCT_TEST_BGN(cycle_step_mnemonic) {
     int result;
     rvm_inst inst;
     int i;

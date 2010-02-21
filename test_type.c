@@ -3,7 +3,7 @@
 
 FCTMF_SUITE_BGN(type_suite) {
 
-  FCT_TEST_BGN(test_sizeof) {
+  FCT_TEST_BGN(type_sizeof) {
     fct_chk_eq_int(sizeof(Bit8u), 1);
     fct_chk_eq_int(sizeof(Bit8s), 1);
     fct_chk_eq_int(sizeof(Bit16u), 2);
@@ -16,7 +16,7 @@ FCTMF_SUITE_BGN(type_suite) {
     fct_chk_eq_int(sizeof(Bits), 4);
   } FCT_TEST_END();
 
-  FCT_TEST_BGN(test_assign) {
+  FCT_TEST_BGN(type_assign) {
     union {
       Bit32u d;
       Bit16u w[2];

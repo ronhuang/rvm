@@ -14,7 +14,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     reader = NULL;
   } FCT_TEARDOWN_END();
 
-  FCT_TEST_BGN(test_single_line) {
+  FCT_TEST_BGN(code_single_line) {
     Bit8u code = 0;
     int i;
     int ret;
@@ -55,7 +55,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     fct_chk_eq_int(code, 0x5d);
   } FCT_TEST_END();
 
-  FCT_TEST_BGN(test_multiple_lines) {
+  FCT_TEST_BGN(code_multiple_lines) {
     Bit8u code = 0;
     int i;
     int ret;
@@ -96,7 +96,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     fct_chk_eq_int(code, 0x5d);
   } FCT_TEST_END();
 
-  FCT_TEST_BGN(test_multiple_lines_with_comment) {
+  FCT_TEST_BGN(code_multiple_lines_with_comment) {
     Bit8u code = 0;
     int i;
     int ret;
@@ -137,7 +137,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     fct_chk_eq_int(code, 0x5d);
   } FCT_TEST_END();
 
-  FCT_TEST_BGN(test_read_multi_bytes) {
+  FCT_TEST_BGN(code_read_multi_bytes) {
     union {
       Bit8u b;
       Bit8s bs;

@@ -10,7 +10,7 @@ FCTMF_FIXTURE_SUITE_BGN(cpu_suite) {
   FCT_TEARDOWN_BGN() {
   } FCT_TEARDOWN_END();
 
-  FCT_TEST_BGN(test_reset) {
+  FCT_TEST_BGN(cpu_reset) {
     Bit32u disp32;
 
     fct_chk_eq_int(reg_eax, 0);
@@ -33,7 +33,7 @@ FCTMF_FIXTURE_SUITE_BGN(cpu_suite) {
     fct_chk_eq_int(reg_gs, 0);
   } FCT_TEST_END();
 
-  FCT_TEST_BGN(test_push) {
+  FCT_TEST_BGN(cpu_push) {
     Bit32u sp = reg_esp;
     Bit32u disp32;
 
