@@ -5,7 +5,7 @@
  * Header file for instruction runner.
  */
 
-#include "type.h"
+#include "code.h"
 
 /**
  * Context of the instruction runner.
@@ -25,12 +25,12 @@ rvm_cycle *rvm_cycle_new(void);
 void rvm_cycle_finalize(rvm_cycle *runner);
 
 /**
- * Set source of the code to instruction runner.
+ * Set code reader to fetch the instructions.
  * \param [in] runner an instance of the instruction runner.
- * \param [in] source filename to file containing the code.
+ * \param [in] reader an instance of the code reader.
  * \return SUCCESS if the source is successfully set, otherwise FAIL.
  */
-int rvm_cycle_set_source(rvm_cycle *runner, const char *source);
+int rvm_cycle_set_code(rvm_cycle *runner, rvm_code *reader);
 
 /**
  * Execute a single instruction.

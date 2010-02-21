@@ -38,41 +38,23 @@ void rvm_cycle_finalize(rvm_cycle *runner) {
     return;
   }
 
-  if (runner->reader) {
-    rvm_code_finalize(runner->reader);
-    runner->reader = NULL;
-  }
-
   if (runner) {
     free(runner);
   }
 }
 
 /**
- * Set source of the code to instruction runner.
+ * Set code reader to fetch the instructions.
  * \param [in] runner an instance of the instruction runner.
- * \param [in] source filename to file containing the code.
+ * \param [in] reader an instance of the code reader.
  * \return SUCCESS if the source is successfully set, otherwise FAIL.
  */
-int rvm_cycle_set_source(rvm_cycle *runner, const char *source) {
-  if (!runner || !source) {
+int rvm_cycle_set_code(rvm_cycle *runner, rvm_code *reader) {
+  if (!runner || !reader) {
     return FAIL;
   }
 
-  /* Close existing code reader. */
-  if (runner->reader) {
-    rvm_code_finalize(runner->reader);
-    runner->reader = NULL;
-  }
-
-  /* Open new code reader. */
-  runner->reader = rvm_code_new();
-  if (!runner->reader) {
-    return FAIL;
-  }
-  if (!runner->reader || !rvm_code_set_source(runner->reader, source)) {
-    return FAIL;
-  }
+  runner->reader = reader;
 
   return SUCCESS;
 }
