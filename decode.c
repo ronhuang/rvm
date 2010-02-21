@@ -5,6 +5,7 @@
 #include "stdlib.h"
 #include "decode.h"
 #include "code.h"
+#include "micro_table.h"
 
 /**
  * Context of the instruction decoder.
@@ -82,7 +83,23 @@ int rvm_decode_set_source(rvm_decode *decoder, const char *source) {
  * \return SUCCESS if decodes an instruction, otherwise FAIL.
  */
 int rvm_decode_next(rvm_decode *decoder, rvm_inst *inst) {
+  Bit8u op;
+  rvm_micro micro;
+  rvm_code *rd;
+
   if (!decoder || !inst || !decoder->reader) {
     return FAIL;
   }
+  rd = decoder->reader;
+
+  if (!rvm_code_read(rd, &op)) {
+    return FAIL;
+  }
+
+  if (0x0f == op) {
+    /* FIXME: support multi-byte opcode */
+    return FAIL;
+  }
+
+  micro = rvm_micro_table[op];
 }
