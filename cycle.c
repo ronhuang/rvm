@@ -118,7 +118,6 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
   /* Fetch the corresponding micro instruction. */
   memcpy(&micro, &rvm_micro_table[opcode], sizeof(micro));
-
   /* Save the mnemonic of the instruction. */
   runner->inst.mnemonic = micro.mnemonic;
 
@@ -166,41 +165,75 @@ int rvm_cycle_step(rvm_cycle *runner) {
       default:
         /* Unsupported effective address. */
         assert(0);
-        break;
+        return FAIL;
       }
+    }
+
+  DISPATCH_EXTRA:
+    /* Extra */
+    switch (micro.extra) {
+    case M_EA:
+      op1.d = offset;
+      break;
+
+    case M_GRP:
+      /* Fetch the corresponding group micro instruction. */
+      memcpy(&micro, &rvm_micro_group_table[micro.process][reg], sizeof(micro));
+      /* Save the mnemonic of the instruction. */
+      runner->inst.mnemonic = micro.mnemonic;
+      goto DISPATCH_EXTRA;
+      break;
+
+    case M_EdIb:
+      /* Second operand. */
+      if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+      op2.d = disp8;
+      /* First operand. */
+      if (mod == 0x11) op1.d = CPU.gregs[rm].d; /* General register. */
+      else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
+      break;
+
+    default:
+      /* Unsupported instruction */
+      assert(0);
+      return FAIL;
     }
     break;
 
   default:
     /* Unsupported instruction */
     assert(0);
-    break;
-  }
-
-  /* Extra */
-  switch (micro.extra) {
-  case M_EA:
-    op1.d = offset;
-    break;
-
-  default:
-    /* Unsupported instruction */
-    assert(0);
-    break;
+    return FAIL;
   }
 
   /* Process operands */
+  switch (micro.process) {
+  case P_AND:
+    op1.d |= op2.d;
+    /* FIXME: set flags. */
+    break;
+
+    /* Unsupported instruction */
+  default:
+    assert(0);
+    return FAIL;
+  }
 
   /* Save operands */
   switch (micro.save) {
-  case S_Gd: /* Destination is a dword genral register. */
-    cpu.gregs[reg].d = op1.d;
+  case S_Gd: /* Destination is a dword general register. */
+    CPU.gregs[reg].d = op1.d;
+    break;
+
+  case S_Ed:
+    if (mod == 0x11) CPU.gregs[reg].d = op1.d; /* Register. */
+    else rvm_mem_save32u(offset, op1.d); /* Effective address memory. */
     break;
 
   default:
     /* Unsupported instruction */
     assert(0);
-    break;
+    return FAIL;
   }
 
   return SUCCESS;

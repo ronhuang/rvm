@@ -26,12 +26,27 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
   FCT_TEST_BGN(test_step_mnemonic) {
     int result;
     rvm_inst inst;
+    int i;
 
+    /* Check first instruction. */
     result = rvm_cycle_step(runner);
     fct_req(result == SUCCESS);
 
     rvm_cycle_get_executed_instruction(runner, &inst);
     fct_chk_eq_str(inst.mnemonic, "lea");
+
+    /* Skip the middle instructions. */
+    for (i = 1; i < 9; i++) {
+      result = rvm_cycle_step(runner);
+      fct_req(result == SUCCESS);
+    }
+
+    /* Check last instruction */
+    result = rvm_cycle_step(runner);
+    fct_req(result == SUCCESS);
+
+    rvm_cycle_get_executed_instruction(runner, &inst);
+    fct_chk_eq_str(inst.mnemonic, "pop");
   } FCT_TEST_END();
 
 } FCTMF_FIXTURE_SUITE_END();

@@ -33,17 +33,30 @@ typedef Bit32s Bits;
 
 
 /** Define field in micro instruction */
+/* Load field. */
 enum {
-  L_MODRM
+  L_MODRM,       /** Check ModR/M. */
 };
 
+/* Save field. */
 enum {
-  S_Gd
+  S_Gd,          /** General register (dword). */
+  S_Ed,          /** Register or memory (dword). */
 };
 
+/* Extra field. */
 enum {
-  M_EA
+  M_EA,          /** Effective address. */
+  M_EdIb,        /** Register or memory, followed by immediate data. */
+  M_GRP,         /** Opcode extension group. */
 };
+
+/* Process field. */
+enum {
+  P_LEA,         /** Load effective address. */
+  P_AND,         /** Logical AND. */
+};
+
 
 /** Define micro instruction */
 typedef struct rvm_micro_t {
@@ -59,31 +72,6 @@ typedef struct rvm_micro_t {
 typedef struct rvm_inst_t {
   const char *mnemonic;
 } rvm_inst;
-
-
-#if 0
-/* Recommended structure for IA-32 instruction. */
-struct IA-32instr {
-  unsigned short opcode, prefixmask;
-  char ilen; // instruction length.
-  InterpreterFunctionPointer execute; //semantic routine
-
-  struct {
-    //general addr. computation:[Rbase+(Rindex << shmt)+ disp.]
-    char mode;  // addressing mode, including register operand
-    char Rbase; // base address register
-    char Rindex;// index register
-    char shmt;  // index scale factor
-    long displacement;
-  } operandRM;
-
-  struct {
-    char mode;  // either register or immediate.
-    char regname;  // register number
-    long immediate;// immediate value
-  } operandRI;
-} instr;
-#endif
 
 
 #endif /* __TYPE_H__ */

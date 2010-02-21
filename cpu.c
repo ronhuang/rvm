@@ -1,3 +1,6 @@
 #include "cpu.h"
 
-struct rvm_cpu_t cpu = {0};
+/**
+ * Global cpu state.
+ */
+struct rvm_cpu_t CPU = {0};

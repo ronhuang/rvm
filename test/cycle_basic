@@ -1,5 +1,5 @@
 8d 4c 24 04              # lea ecx,[esp+4]
-83 e4 f0                 # and esp,0xfffffff0
+83 e4 f0                 # and esp,0xf0
 50                       # push eax
 c1 f8 02                 # sar eax,0x02
 34 2e                    # xor al,0x2e

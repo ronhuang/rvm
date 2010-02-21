@@ -37,20 +37,20 @@ struct rvm_cpu_t {
 /**
  * Global cpu state.
  */
-extern struct rvm_cpu_t cpu;
+extern struct rvm_cpu_t CPU;
 
 
 /**
  * Convenient macros for accessing registers.
  */
-#define reg_eax cpu.gregs[REG_AX].d
-#define reg_ecx cpu.gregs[REG_CX].d
-#define reg_edx cpu.gregs[REG_DX].d
-#define reg_ebx cpu.gregs[REG_BX].d
-#define reg_esp cpu.gregs[REG_SP].d
-#define reg_ebp cpu.gregs[REG_BP].d
-#define reg_esi cpu.gregs[REG_SI].d
-#define reg_edi cpu.gregs[REG_DI].d
+#define reg_eax CPU.gregs[REG_AX].d
+#define reg_ecx CPU.gregs[REG_CX].d
+#define reg_edx CPU.gregs[REG_DX].d
+#define reg_ebx CPU.gregs[REG_BX].d
+#define reg_esp CPU.gregs[REG_SP].d
+#define reg_ebp CPU.gregs[REG_BP].d
+#define reg_esi CPU.gregs[REG_SI].d
+#define reg_edi CPU.gregs[REG_DI].d
 
 
-#endif __CPU_H__
+#endif /* __CPU_H__ */
