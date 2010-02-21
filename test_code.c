@@ -22,7 +22,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     /* Otherwise no point in testing further! */
     fct_req(reader != NULL);
 
-    ret = rvm_code_set_source(reader, "test/code_single_line");
+    ret = rvm_code_set_file_source(reader, "test/code_single_line");
     fct_req(ret == SUCCESS);
 
     /* Test first 5 bytes. */
@@ -63,7 +63,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     /* Otherwise no point in testing further! */
     fct_req(reader != NULL);
 
-    ret = rvm_code_set_source(reader, "test/code_multiple_lines");
+    ret = rvm_code_set_file_source(reader, "test/code_multiple_lines");
     fct_req(ret == SUCCESS);
 
     /* Test first 5 bytes. */
@@ -104,7 +104,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     /* Otherwise no point in testing further! */
     fct_req(reader != NULL);
 
-    ret = rvm_code_set_source(reader, "test/code_multiple_lines_with_comment");
+    ret = rvm_code_set_file_source(reader, "test/code_multiple_lines_with_comment");
     fct_req(ret == SUCCESS);
 
     /* Test first 5 bytes. */
@@ -151,7 +151,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     /* Otherwise no point in testing further! */
     fct_req(reader != NULL);
 
-    ret = rvm_code_set_source(reader, "test/code_multi_bytes");
+    ret = rvm_code_set_file_source(reader, "test/code_multi_bytes");
     fct_req(ret == SUCCESS);
 
     rvm_code_read8s(reader, &code.bs);
@@ -159,6 +159,29 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
 
     rvm_code_read32u(reader, &code.d);
     fct_chk_eq_int(code.d, 0xFEEDBEEF);
+  } FCT_TEST_END();
+
+  FCT_TEST_BGN(code_read_buffer) {
+    int ret;
+    Bit8u code;
+
+    /* Otherwise no point in testing further! */
+    fct_req(reader != NULL);
+
+    ret = rvm_code_set_string_source(reader,
+                                     "50                       # push eax\n"
+                                     "c1 f8 02                 # sar eax,0x02\n"
+                                     );
+    fct_chk_eq_int(ret, SUCCESS);
+
+    rvm_code_read8u(reader, &code);
+    fct_chk_eq_int(code, 0x50);
+    rvm_code_read8u(reader, &code);
+    fct_chk_eq_int(code, 0xc1);
+    rvm_code_read8u(reader, &code);
+    fct_chk_eq_int(code, 0xf8);
+    rvm_code_read8u(reader, &code);
+    fct_chk_eq_int(code, 0x02);
   } FCT_TEST_END();
 
 } FCTMF_FIXTURE_SUITE_END();

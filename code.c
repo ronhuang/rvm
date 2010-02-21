@@ -18,9 +18,10 @@
  * Context for the code reader
  */
 struct rvm_code_t {
-  FILE *source;
+  FILE *file;
+  const char *string;
 
-  char *buffer;
+  const char *buffer;
   int buffer_position;
   int buffer_size;
 
@@ -39,12 +40,6 @@ rvm_code *rvm_code_new(void) {
   }
   memset(reader, 0, sizeof(rvm_code));
 
-  reader->buffer = malloc(MAX_BUFFER_LENGTH);
-  if (!reader->buffer) {
-    free(reader);
-    return NULL;
-  }
-
   return reader;
 }
 
@@ -58,13 +53,13 @@ void rvm_code_finalize(rvm_code *reader) {
     return;
   }
 
-  if (reader->buffer) {
-    free(reader->buffer);
-  }
+  if (reader->file) {
+    fclose(reader->file);
+    reader->file = NULL;
 
-  if (reader->source) {
-    fclose(reader->source);
-    reader->source = NULL;
+    if (reader->buffer) {
+      free((void *)reader->buffer);
+    }
   }
 
   if (reader) {
@@ -74,27 +69,57 @@ void rvm_code_finalize(rvm_code *reader) {
 
 
 /**
- * Set source for code reader.
+ * Set filename containing the source for code reader.
  * \param [in] reader an instance of the code reader.
- * \param [in] source filename to file containing the code.
+ * \param [in] filename filename to file containing the code.
  * \return SUCCESS if the source is successfully set, otherwise FAIL.
  */
-int rvm_code_set_source(rvm_code *reader, const char *source) {
-  if (!reader || !source) {
+int rvm_code_set_file_source(rvm_code *reader, const char *filename) {
+  if (!reader || !filename) {
     return FAIL;
   }
 
   /* Close existing file handle. */
-  if (reader->source) {
-    fclose(reader->source);
-    reader->source = NULL;
+  if (reader->file) {
+    fclose(reader->file);
+    reader->file = NULL;
   }
 
   /* Open new file handle. */
-  reader->source = fopen(source, "rb");
-  if (!reader->source) {
+  reader->file = fopen(filename, "rb");
+  if (!reader->file) {
     return FAIL;
   }
+
+  /* Reverse buffer for reading file. */
+  reader->buffer = malloc(MAX_BUFFER_LENGTH);
+  if (!reader->buffer) {
+    fclose(reader->file);
+    reader->file = NULL;
+    return FAIL;
+  }
+
+  reader->buffer_position = reader->buffer_size = 0;
+
+  return SUCCESS;
+}
+
+
+/**
+ * Set string as source for code reader.
+ * \param [in] reader an instance of the code reader.
+ * \param [in] string a NULL terminated string.
+ * \return SUCCESS if the source is successfully set, otherwise FAIL.
+ */
+int rvm_code_set_string_source(rvm_code *reader, const char *string) {
+  if (!reader || !string) {
+    return FAIL;
+  }
+
+  reader->buffer = string;
+  reader->buffer_position = 0;
+  reader->buffer_size = strlen(string);
+
   return SUCCESS;
 }
 
@@ -109,7 +134,7 @@ int rvm_code_read(rvm_code *reader, Bit8u *code) {
   char raw[3];
   int raw_position = 0;
 
-  if (!reader || !code || !reader->source || !reader->buffer) {
+  if (!reader || !code) {
     return FAIL;
   }
 
@@ -117,23 +142,35 @@ int rvm_code_read(rvm_code *reader, Bit8u *code) {
 
   while (raw_position < 2) {
     if (reader->buffer_position >= reader->buffer_size) {
-      /* Read from file */
-      char *ret = fgets(reader->buffer, MAX_BUFFER_LENGTH, reader->source);
-      if (!ret) {
-        /* Error or EOF, stop trying to read. */
+      if (reader->file) {
+        /* Read from file */
+        char *ret = fgets((char *)reader->buffer, MAX_BUFFER_LENGTH, reader->file);
+        if (!ret) {
+          /* Error or EOF, stop trying to read. */
+          break;
+        }
+
+        reader->buffer_position = 0;
+        reader->buffer_size = strlen(reader->buffer);
+      }
+      else {
+        /* Nothing else to read from string source. */
         break;
       }
-
-      reader->buffer_position = 0;
-      reader->buffer_size = strlen(reader->buffer);
     }
 
-    /* Consume the rest of the buffer */
+    /* Consume comment. */
     if (reader->in_comment) {
-      if ('\n' == reader->buffer[reader->buffer_size - 1]) {
+      const char *nl = strchr(reader->buffer + reader->buffer_position, '\n');
+      if (nl) {
+        /* Consume until the next newline. */
         reader->in_comment = 0;
+        reader->buffer_position = (nl - reader->buffer) + 1;
       }
-      reader->buffer_position = reader->buffer_size;
+      else {
+        /* No newline found, assuming the rest of the buffer are comment. */
+        reader->buffer_position = reader->buffer_size;
+      }
     }
 
     if (reader->buffer_position < reader->buffer_size) {

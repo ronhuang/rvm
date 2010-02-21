@@ -37,12 +37,21 @@ void rvm_code_finalize(rvm_code *reader);
 
 
 /**
- * Set source for code reader.
+ * Set filename containing the source for code reader.
  * \param [in] reader an instance of the code reader.
- * \param [in] source filename to file containing the code.
+ * \param [in] filename filename to file containing the code.
  * \return SUCCESS if the source is successfully set, otherwise FAIL.
  */
-int rvm_code_set_source(rvm_code *reader, const char *source);
+int rvm_code_set_file_source(rvm_code *reader, const char *filename);
+
+
+/**
+ * Set string as source for code reader.
+ * \param [in] reader an instance of the code reader.
+ * \param [in] string a NULL terminated string.
+ * \return SUCCESS if the source is successfully set, otherwise FAIL.
+ */
+int rvm_code_set_string_source(rvm_code *reader, const char *string);
 
 
 /**

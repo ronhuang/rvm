@@ -9,7 +9,7 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
 
   FCT_SETUP_BGN() {
     reader = rvm_code_new();
-    rvm_code_set_source(reader, "test/cycle_basic");
+    rvm_code_set_file_source(reader, "test/cycle_basic");
 
     runner = rvm_cycle_new();
     rvm_cycle_set_code(runner, reader);
