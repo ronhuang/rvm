@@ -203,7 +203,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     break;
   }
 
-  return FAIL;
+  return SUCCESS;
 }
 
 /**
@@ -213,5 +213,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
  * \return SUCCESS if cycles an instruction, otherwise FAIL.
  */
 int rvm_cycle_get_executed_instruction(rvm_cycle *runner, rvm_inst *inst) {
-  return FAIL;
+  /* Prepare. */
+  if (!runner) {
+    return FAIL;
+  }
+  memcpy(inst, &runner->inst, sizeof(rvm_inst));
+
+  return SUCCESS;
 }
