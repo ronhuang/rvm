@@ -1,75 +1,76 @@
 /**
- * Implementation of instruction decoder.
+ * Implementation of instruction runner.
  */
 
-#include "stdlib.h"
-#include "decode.h"
+#include <stdlib.h>
+#include <string.h>
+#include "cycle.h"
 #include "code.h"
 #include "micro_table.h"
 
 /**
- * Context of the instruction decoder.
+ * Context of the instruction runner.
  */
-struct rvm_decode_t {
+struct rvm_cycle_t {
   rvm_code *reader;
 };
 
 /**
  * Constructor.
- * \return Instance of the instruction decoder.
+ * \return Instance of the instruction runner.
  */
-rvm_decode *rvm_decode_new(void) {
-  rvm_decode *decoder = malloc(sizeof(rvm_decode));
-  if (!decoder) {
+rvm_cycle *rvm_cycle_new(void) {
+  rvm_cycle *runner = malloc(sizeof(rvm_cycle));
+  if (!runner) {
     return NULL;
   }
-  memset(decoder, 0, sizeof(rvm_decode));
+  memset(runner, 0, sizeof(rvm_cycle));
 
-  return decoder;
+  return runner;
 }
 
 /**
  * Destructor.
- * \param [in] decoder an instance of the instruction decoder.
+ * \param [in] runner an instance of the instruction runner.
  */
-void rvm_decode_finalize(rvm_decode *decoder) {
-  if (!decoder) {
+void rvm_cycle_finalize(rvm_cycle *runner) {
+  if (!runner) {
     return;
   }
 
-  if (decoder->reader) {
-    rvm_code_finalize(decoder->reader);
-    decoder->reader = NULL;
+  if (runner->reader) {
+    rvm_code_finalize(runner->reader);
+    runner->reader = NULL;
   }
 
-  if (decoder) {
-    free(decoder);
+  if (runner) {
+    free(runner);
   }
 }
 
 /**
- * Set source of the code to instruction decoder.
- * \param [in] decoder an instance of the instruction decoder.
+ * Set source of the code to instruction runner.
+ * \param [in] runner an instance of the instruction runner.
  * \param [in] source filename to file containing the code.
  * \return SUCCESS if the source is successfully set, otherwise FAIL.
  */
-int rvm_decode_set_source(rvm_decode *decoder, const char *source) {
-  if (!decoder || !source) {
+int rvm_cycle_set_source(rvm_cycle *runner, const char *source) {
+  if (!runner || !source) {
     return FAIL;
   }
 
   /* Close existing code reader. */
-  if (decoder->reader) {
-    rvm_code_finalize(decoder->reader);
-    decoder->reader = NULL;
+  if (runner->reader) {
+    rvm_code_finalize(runner->reader);
+    runner->reader = NULL;
   }
 
   /* Open new code reader. */
-  decoder->reader = rvm_code_new();
-  if (!decoder->reader) {
+  runner->reader = rvm_code_new();
+  if (!runner->reader) {
     return FAIL;
   }
-  if (!decoder->reader || !rvm_code_set_source(decoder->reader, source)) {
+  if (!runner->reader || !rvm_code_set_source(runner->reader, source)) {
     return FAIL;
   }
 
@@ -77,20 +78,19 @@ int rvm_decode_set_source(rvm_decode *decoder, const char *source) {
 }
 
 /**
- * Decode and return the next instruction.
- * \param [in] decoder an instance of the instruction decoder.
- * \param [out] inst an instance of the decoded instruction.
- * \return SUCCESS if decodes an instruction, otherwise FAIL.
+ * Execute a single instruction.
+ * \param [in] runner an instance of the instruction runner.
+ * \return SUCCESS if cycles an instruction, otherwise FAIL.
  */
-int rvm_decode_next(rvm_decode *decoder, rvm_inst *inst) {
+int rvm_cycle_step(rvm_cycle *runner) {
   Bit8u op;
   rvm_micro micro;
   rvm_code *rd;
 
-  if (!decoder || !inst || !decoder->reader) {
+  if (!runner || !runner->reader) {
     return FAIL;
   }
-  rd = decoder->reader;
+  rd = runner->reader;
 
   if (!rvm_code_read(rd, &op)) {
     return FAIL;

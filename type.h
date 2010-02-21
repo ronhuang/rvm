@@ -42,9 +42,6 @@ enum {
   L_MODRM
 };
 
-enum {
-};
-
 /** Define micro instruction */
 typedef struct rvm_micro_t {
   int load;
