@@ -217,7 +217,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
   /* Process operands */
   switch (micro.process) {
   case P_AND:
-    op1.d |= op2.d;
+    op1.d &= op2.d;
     /* FIXME: set flags. */
     break;
 

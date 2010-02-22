@@ -47,23 +47,21 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
   FCT_TEST_BGN(cycle_inst_and) {
     int result;
     Bit32u value = 0x12345678;
-    Bit32u esp_content;
 
     /* Set source. */
-    /* and esp,0xf0 */
+    /* and esp,0xfffffff0 */
     rvm_code_set_string_source(reader, "83 e4 f0");
 
     /* Prerequisite. */
-    fct_chk_neq_int(value, value & 0xf0);
-    rvm_mem_save32u(reg_esp, value);
+    fct_chk_neq_int(value, value & 0xfffffff0);
 
     /* Execute */
+    reg_esp = value;
     result = rvm_cycle_step(runner);
 
     /* Check */
     fct_chk_eq_int(result, SUCCESS);
-    rvm_mem_load32u(reg_esp, &esp_content);
-    fct_chk_eq_int(esp_content, value & 0xf0);
+    fct_chk_eq_int(reg_esp, value & 0xfffffff0);
   } FCT_TEST_END();
 
   FCT_TEST_BGN(cycle_step_mnemonic) {
