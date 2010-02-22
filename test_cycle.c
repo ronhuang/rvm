@@ -70,7 +70,7 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
     int i;
 
     /* Set source. */
-    rvm_code_set_file_source(reader, "test/cycle_basic");
+    rvm_code_set_file_source(reader, "sample/cycle_basic");
 
     /* Check first instruction. */
     result = rvm_cycle_step(runner);

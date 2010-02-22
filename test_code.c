@@ -22,7 +22,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     /* Otherwise no point in testing further! */
     fct_req(reader != NULL);
 
-    ret = rvm_code_set_file_source(reader, "test/code_single_line");
+    ret = rvm_code_set_file_source(reader, "sample/code_single_line");
     fct_req(ret == SUCCESS);
 
     /* Test first 5 bytes. */
@@ -63,7 +63,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     /* Otherwise no point in testing further! */
     fct_req(reader != NULL);
 
-    ret = rvm_code_set_file_source(reader, "test/code_multiple_lines");
+    ret = rvm_code_set_file_source(reader, "sample/code_multiple_lines");
     fct_req(ret == SUCCESS);
 
     /* Test first 5 bytes. */
@@ -104,7 +104,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     /* Otherwise no point in testing further! */
     fct_req(reader != NULL);
 
-    ret = rvm_code_set_file_source(reader, "test/code_multiple_lines_with_comment");
+    ret = rvm_code_set_file_source(reader, "sample/code_multiple_lines_with_comment");
     fct_req(ret == SUCCESS);
 
     /* Test first 5 bytes. */
@@ -151,7 +151,7 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     /* Otherwise no point in testing further! */
     fct_req(reader != NULL);
 
-    ret = rvm_code_set_file_source(reader, "test/code_multi_bytes");
+    ret = rvm_code_set_file_source(reader, "sample/code_multi_bytes");
     fct_req(ret == SUCCESS);
 
     rvm_code_read8s(reader, &code.bs);
