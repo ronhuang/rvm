@@ -60,6 +60,7 @@ enum {
 enum {
   P_NOP = 0,     /** Skip this. */
   P_AND,         /** Logical AND. */
+  P_SAR,         /** Arithmetic right shift. */
 };
 
 

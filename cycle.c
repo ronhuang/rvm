@@ -221,6 +221,14 @@ int rvm_cycle_step(rvm_cycle *runner) {
     /* FIXME: set flags. */
     break;
 
+  case P_SAR:
+    __asm__ __volatile__("sar %%cl,%0"
+                         :"=a"(op1.d)
+                         :"0"(op1.d), "c"(op2.d)
+                         );
+    /* FIXME: set flags. */
+    break;
+
   case P_NOP:
     break;
 
@@ -237,7 +245,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     break;
 
   case S_Ed:
-    if (mod == 0x03) CPU.gregs[reg].d = op1.d; /* Register. */
+    if (mod == 0x03) CPU.gregs[rm].d = op1.d; /* Register. */
     else rvm_mem_save32u(offset, op1.d); /* Effective address memory. */
     break;
 
