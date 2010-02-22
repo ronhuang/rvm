@@ -201,11 +201,17 @@ int rvm_cycle_step(rvm_cycle *runner) {
     }
     break;
 
- case L_REG:
-   op1.d = CPU.gregs[micro.extra].d;
-   break;
+  case L_REGd:
+    op1.d = CPU.gregs[micro.extra].d;
+    break;
 
- case L_NOP:
+  case L_REGbIb:
+    if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+    op2.b = disp8;
+    op1.b = CPU.gregs[micro.extra].b[0];
+    break;
+
+  case L_NOP:
     break;
 
   default:
@@ -226,6 +232,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
                          :"=a"(op1.d)
                          :"0"(op1.d), "c"(op2.d)
                          );
+    /* FIXME: set flags. */
+    break;
+
+  case P_XORb:
+    op1.b ^= op2.b;
     /* FIXME: set flags. */
     break;
 
@@ -251,6 +262,10 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
   case S_PUSH: /* Push operand to stack. */
     rvm_cpu_push32u(op1.d);
+    break;
+
+  case S_REGb:
+    CPU.gregs[micro.extra].b[0] = op1.b;
     break;
 
   case S_NOP:

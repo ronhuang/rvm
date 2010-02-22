@@ -114,6 +114,27 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
     fct_chk_eq_int(reg_eax, 0x03fffc00);
   } FCT_TEST_END();
 
+  FCT_TEST_BGN(cycle_inst_xor) {
+    int result;
+    Bit32u value = 0x66;
+    Bit32u disp32;
+
+    /* Set source */
+    /* xor al,0x2e */
+    rvm_code_set_string_source(reader, "34 2e");
+
+    /* Prerequisite */
+    fct_chk_neq_int(value, value ^ 0x2e);
+
+    /* Execute */
+    reg_al = value;
+    result = rvm_cycle_step(runner);
+
+    /* Check */
+    fct_chk_eq_int(result, SUCCESS);
+    fct_chk_eq_int(reg_al, value ^ 0x2e);
+  } FCT_TEST_END();
+
   FCT_TEST_BGN(cycle_step_mnemonic) {
     int result;
     rvm_inst inst;

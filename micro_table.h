@@ -67,7 +67,7 @@ rvm_micro rvm_micro_table[] = {
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
+  {L_REGbIb     ,P_XORb     ,S_REGb ,REG_AX ,"xor"        },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
@@ -101,7 +101,7 @@ rvm_micro rvm_micro_table[] = {
   {0            ,0          ,0      ,0      },
 
   /* 0x50 ~ 0x57 */
-  {L_REG        ,0          ,S_PUSH ,REG_AX ,"push"       },
+  {L_REGd       ,0          ,S_PUSH ,REG_AX ,"push"       },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },

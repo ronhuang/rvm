@@ -37,15 +37,17 @@ typedef Bit32s Bits;
 enum {
   L_NOP = 0,     /** Skip this. */
   L_MODRM,       /** Operands are in ModR/M. */
-  L_REG,         /** Operands are in opcode. */
+  L_REGd,        /** Operands is register specified in table (Bit32u). */
+  L_REGbIb,      /** Operands is register specified in table (Bit8u) and immediate data (Bit8u). */
 };
 
 /* Save field. */
 enum {
   S_NOP = 0,     /** Skip this. */
-  S_Gd,          /** General register (dword). */
-  S_Ed,          /** Register or memory (dword). */
+  S_Gd,          /** General register specified in ModR/M (Bit32u). */
+  S_Ed,          /** Register or memory specified in ModR/M (Bit32u). */
   S_PUSH,        /** Push data to stack. */
+  S_REGb,        /** Register specified in table (Bit8u). */
 };
 
 /* Extra field. */
@@ -61,6 +63,7 @@ enum {
   P_NOP = 0,     /** Skip this. */
   P_AND,         /** Logical AND. */
   P_SAR,         /** Arithmetic right shift. */
+  P_XORb,        /** Logical XOR (Bit8u). */
 };
 
 

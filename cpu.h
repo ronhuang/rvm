@@ -44,9 +44,17 @@ extern struct rvm_cpu_t CPU;
  * Convenient macros for accessing registers.
  */
 #define reg_eax CPU.gregs[REG_AX].d
+#define reg_al  CPU.gregs[REG_AX].b[0]
+
 #define reg_ecx CPU.gregs[REG_CX].d
+#define reg_cl  CPU.gregs[REG_CX].b[0]
+
 #define reg_edx CPU.gregs[REG_DX].d
+#define reg_dl  CPU.gregs[REG_DX].b[0]
+
 #define reg_ebx CPU.gregs[REG_BX].d
+#define reg_bl  CPU.gregs[REG_BX].b[0]
+
 #define reg_esp CPU.gregs[REG_SP].d
 #define reg_ebp CPU.gregs[REG_BP].d
 #define reg_esi CPU.gregs[REG_SI].d
