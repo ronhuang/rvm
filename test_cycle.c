@@ -244,30 +244,20 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
   FCT_TEST_BGN(cycle_step_mnemonic) {
     int result;
     rvm_inst inst;
-    int i;
+    const char *mnemonics[] = {
+      "lea", "and", "push", "sar", "xor", "mov", "inc", "sub", "cmp", "pop", NULL
+    };
+    const char **m;
 
     /* Set source. */
     rvm_code_set_file_source(reader, "sample/cycle_basic");
 
-    /* Check first instruction. */
-    result = rvm_cycle_step(runner);
-    fct_req(result == SUCCESS);
-
-    rvm_cycle_get_executed_instruction(runner, &inst);
-    fct_chk_eq_str(inst.mnemonic, "lea");
-
-    /* Skip the middle instructions. */
-    for (i = 1; i < 9; i++) {
+    for (m = mnemonics; *m != NULL; m++) {
       result = rvm_cycle_step(runner);
-      fct_req(result == SUCCESS);
+      fct_chk_eq_int(result, SUCCESS);
+      rvm_cycle_get_executed_instruction(runner, &inst);
+      fct_chk_eq_str(inst.mnemonic, *m);
     }
-
-    /* Check last instruction */
-    result = rvm_cycle_step(runner);
-    fct_req(result == SUCCESS);
-
-    rvm_cycle_get_executed_instruction(runner, &inst);
-    fct_chk_eq_str(inst.mnemonic, "pop");
   } FCT_TEST_END();
 
 } FCTMF_FIXTURE_SUITE_END();
