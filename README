@@ -1,2 +1,90 @@
-CS6270 – Virtual Machines
-Programming Assignment 1
+
+                Ron's x86 Virtual Machine (lite)
+           ==========================================
+
+Content
+---------
+
+ 1. Introduction
+ 2. Directory Contents
+ 3. How to Build, Test, and Run
+ 4. License
+ 5. Reporting Bugs
+ 6. Known Issues
+
+
+1. INTRODUCTION
+-----------------
+
+This tree contains sources, tests, and samples for Ron's x86 Virtual
+Machine (lite) package, or `rvm'. `rvm' reads a text file with x86
+machine code. It will disassemble and execute the instructions within
+the file. Registers and flags of the CPU are also dumped for every
+step.
+
+`rvm' uses the interpreter technique to execute the x86
+instructions. Due to the nature of variable-length instruction in x86
+architecture, the interpreter does not have distinct separation of the
+three instruction execution phases, fetch, decode, and
+dispatch. Instead, parts of the instruction are fetched and decoded
+first. Then depending on the partial decoded instruction, more parts
+might need to be fetched.
+
+Besides executing instructions, `rvm' also emulates the general
+registers, flags, and memory. The memory is implemented via a hash
+table and supports full 32-bit range address.
+
+Sample code files that `rvm' takes are as follow:
+
+  # Sample I:
+  50 c1 f8 02 34 2e 89 e5
+
+  # Sample II:
+  50                       # push eax
+  c1 f8 02                 # sar eax,0x02
+  34 2e                    # xor al,0x2e
+  89 e5                    # mov ebp,esp
+
+The code can be all on a single line or on multiple lines. The pound
+sign (#) indicates that the rest of the characters on the same line
+are comments. More samples are located in the `sample' folder (see
+below for list of directory and files.)
+
+Test-driven development was used when developing `rvm'. Unit test
+cases are written prior the implementation. If you encounter bugs when
+executing `rvm', please try running the test cases first (see below on
+how to run tests.)
+
+`rvm' is part of the programming assignment 1 for CS6270 – Virtual
+Machines.
+
+
+2. DIRECTORY CONTENTS
+-----------------------
+
+
+
+3. HOW TO BUILD, TEST, RUN
+----------------------------
+
+
+
+4. LICENSE
+------------
+
+
+
+5. REPORTING BUGS
+-------------------
+
+
+
+6. KNOWN ISSUES
+-----------------
+
+ * Only support IA-32 architecture. 64-bit instructions are not
+   supported.
+
+ * Only support flat memory model. Segment registers are not used.
+
+
