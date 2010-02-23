@@ -107,5 +107,12 @@ int rvm_cpu_reset(void);
  */
 int rvm_cpu_push32u(Bit32u field);
 
+/**
+ * Pop from stack to field (Bit32u).
+ * \param [out] will contain the poped data.
+ * \return SUCCESS if the source is successfully set, otherwise FAIL.
+ */
+int rvm_cpu_pop32u(Bit32u *field);
+
 
 #endif /* __CPU_H__ */

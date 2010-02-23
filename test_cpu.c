@@ -36,11 +36,26 @@ FCTMF_FIXTURE_SUITE_BGN(cpu_suite) {
   FCT_TEST_BGN(cpu_push) {
     Bit32u sp = reg_esp;
     Bit32u disp32;
+    int ret;
 
-    rvm_cpu_push32u(0xFEEDBEEF);
+    ret = rvm_cpu_push32u(0xFEEDBEEF);
+    fct_chk_eq_int(ret, SUCCESS);
     fct_chk_eq_int(sp - 4, reg_esp);
 
     rvm_mem_load32u(reg_esp, &disp32);
+    fct_chk_eq_int(disp32, 0xFEEDBEEF);
+  } FCT_TEST_END();
+
+  FCT_TEST_BGN(cpu_pop) {
+    Bit32u sp = reg_esp;
+    Bit32u disp32;
+    int ret;
+
+    rvm_mem_save32u(reg_esp, 0xFEEDBEEF);
+
+    ret = rvm_cpu_pop32u(&disp32);
+    fct_chk_eq_int(ret, SUCCESS);
+    fct_chk_eq_int(sp + 4, reg_esp);
     fct_chk_eq_int(disp32, 0xFEEDBEEF);
   } FCT_TEST_END();
 
