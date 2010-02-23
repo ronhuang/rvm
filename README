@@ -10,31 +10,46 @@ Content
  3. How to Build, Test, and Run
  4. License
  5. Reporting Bugs
- 6. Known Issues
+ 6. Limitations
 
 
 1. INTRODUCTION
 -----------------
 
 This tree contains sources, tests, and samples for Ron's x86 Virtual
-Machine (lite) package, or `rvm'. `rvm' reads a text file with x86
-machine code. It will disassemble and execute the instructions within
-the file. Registers and flags of the CPU are also dumped for every
-step.
+Machine (lite) package, or `rvm'.
 
-`rvm' uses the interpreter technique to execute the x86
-instructions. Due to the nature of variable-length instruction in x86
+`rvm' can disassemble and execute instructions from a text file with
+x86 machine codes. For each instruction executed, it will dump the
+registers and flags of the CPU. `rvm' also emulates the registers,
+flags, stack, and memory. They are updated according the executed
+instructions. The memory is implemented via a hash table and supports
+full 32-bit range address.
+
+`rvm' uses the interpretation technique to execute the x86
+instructions. The interpreter is driven by the predefined opcode map
+table roughly equivalent to "Table A-2. One-byte Opcode Map" in the
+Intel manual. Each of the opcode has an entry in the table and is
+encoded into four fields: load, process, save, and extra. These four
+fields are like states in a state machine. The interpreter can follow
+these state and successful decode and execute the instructions. By
+extending the entries in the table, `rvm' can be easily extended to
+support more instructions.
+
+But due to the nature of variable-length instruction in x86
 architecture, the interpreter does not have distinct separation of the
 three instruction execution phases, fetch, decode, and
 dispatch. Instead, parts of the instruction are fetched and decoded
 first. Then depending on the partial decoded instruction, more parts
 might need to be fetched.
 
-Besides executing instructions, `rvm' also emulates the general
-registers, flags, stack, and memory. The memory is implemented via a
-hash table and supports full 32-bit range address.
+This make it harder to perform optimizations like threaded
+interpretation. But like what Donald Knuth said: "We should forget
+about small efficiencies, say about 97% of the time: premature
+optimization is the root of all evil." And also since `rvm' is still
+at it's infancy, not much optimization was implemented in `rvm'.
 
-Sample code files that `rvm' takes are as follow:
+Samples of the machine code files that `rvm' takes are as follow:
 
   # Sample I:
   50 c1 f8 02 34 2e 89 e5
@@ -69,15 +84,14 @@ type.h          Define common data types used in `rvm'.
 mem.[hc]        Memory emulation.
 cpu.[hc]        CPU states, such as registers, flags, stack.
 code.[hc]       Code reader, reads code from file or buffer.
-micro_table.h   Opcode map table roughly equivalent to
-                "Table A-2. One-byte Opcode Map" in the Intel manual.
+micro_table.h   Predefined opcode map table.
 cycle.[hc]      Main implementation of the interpreter.
 rvm.c           Front-end for the `rvm'.
 
 test_*.c        Unit test cases for the above components.
 sample/         Sample machine code file used for testing.
 
-fct.h           FCTX - Fast C Unit Testing in a Header.
+fct.h           FCT (Fast C Test) Unit Testing Framework.
 hashtable.[hc]  C Hash Table by Christopher Clark.
 
 
@@ -110,19 +124,31 @@ package, you can:
 4. LICENSE
 ------------
 
+`rvm' is licensed under the New BSD License.
+
+FCT (Fast C Test) Unit Testing Framework is licensed under the New BSD
+License.
+
+C Hash Table is licensed under the New BSD License.
 
 
 5. REPORTING BUGS
 -------------------
 
+If you encounter bugs or have trouble running `rvm', please contact:
+
+  Yih-Lun Huang <ylhuang@nus.edu.sg>
 
 
-6. KNOWN ISSUES
------------------
+6. LIMITATIONS
+----------------
 
- * Only support IA-32 architecture. 64-bit instructions are not
+There is actually quite many limitations in `rvm':
+ * Support only IA-32 architecture. 64-bit instructions are not
    supported.
-
- * Only support flat memory model. Segment registers are not used.
-
-
+ * Roughly only 10 instructions with specific operands are currently
+   supported.
+ * Opcode map table currently on support one-byte opcodes. But this
+   can be easily extended.
+ * Support only flat memory model. Segment registers are not used.
+ * A lot more...
