@@ -190,7 +190,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
       if (!rvm_code_read8s(rd, &disp8)) return FAIL;
       op2.d = disp8;
       /* First operand. */
-      if (mod == 0x03) op1.d = CPU.gregs[rm].b[0]; /* General register. */
+      if (mod == 0x03) op1.d = reg_8(rm); /* General register. */
       else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
       break;
 
@@ -199,12 +199,12 @@ int rvm_cycle_step(rvm_cycle *runner) {
       if (!rvm_code_read8s(rd, &disp8)) return FAIL;
       op2.d = disp8;
       /* First operand. */
-      if (mod == 0x03) op1.d = CPU.gregs[rm].d; /* General register. */
+      if (mod == 0x03) op1.d = reg_32(rm); /* General register. */
       else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
       break;
 
     case M_Gd: /* ModR/M specifies a register (Bit32u). */
-      op1.d = CPU.gregs[reg].d;
+      op1.d = reg_32(reg);
       break;
 
     default:
@@ -215,13 +215,13 @@ int rvm_cycle_step(rvm_cycle *runner) {
     break;
 
   case L_REGd: /* Operand is a register (Bit32u) specified in table. */
-    op1.d = CPU.gregs[micro.extra].d;
+    op1.d = reg_32(micro.extra);
     break;
 
   case L_REGbIb: /* Operands are register (Bit8u) specified in table and an immediate data (Bit8u). */
     if (!rvm_code_read8s(rd, &disp8)) return FAIL;
     op2.d = disp8;
-    op1.d = CPU.gregs[micro.extra].d;
+    op1.d = reg_32(micro.extra);
     break;
 
   case L_POP: /* Pop value from stack to the first operand. */
@@ -307,11 +307,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
   /* Save operands */
   switch (micro.save) {
   case S_Gd: /* Destination is a general register (Bit32u) specified in ModR/M. */
-    CPU.gregs[reg].d = op1.d;
+    reg_32(reg) = op1.d;
     break;
 
   case S_Ed: /* Destination is either a register or memory specified in ModR/M. */
-    if (mod == 0x03) CPU.gregs[rm].d = op1.d; /* Register. */
+    if (mod == 0x03) reg_32(rm) = op1.d; /* Register. */
     else rvm_mem_save32u(offset, op1.d); /* Effective address memory. */
     break;
 
@@ -320,11 +320,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
     break;
 
   case S_REGd: /* Save destination to register (Bit32u) specified in table. */
-    CPU.gregs[micro.extra].d = op1.d;
+    reg_32(micro.extra) = op1.d;
     break;
 
   case S_REGb: /* Save destination to register (Bit8u) specified in table. */
-    CPU.gregs[micro.extra].b[0] = op1.b;
+    reg_8(micro.extra) = op1.b;
     break;
 
   case S_NOP:

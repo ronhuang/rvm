@@ -78,6 +78,9 @@ extern struct rvm_cpu_t CPU;
 #define reg_fs CPU.sregs[REG_FS]
 #define reg_gs CPU.sregs[REG_GS]
 
+#define reg_32(reg) (CPU.gregs[(reg)].d)
+#define reg_8(reg) (CPU.gregs[(reg)].b[0])
+
 
 /**
  * Convenient macros for accessing flags.
@@ -113,6 +116,11 @@ int rvm_cpu_push32u(Bit32u field);
  * \return SUCCESS if the source is successfully set, otherwise FAIL.
  */
 int rvm_cpu_pop32u(Bit32u *field);
+
+
+/**
+ * Dump the registers and flags.
+ */
 
 
 #endif /* __CPU_H__ */
