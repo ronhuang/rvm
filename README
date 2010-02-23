@@ -31,8 +31,8 @@ first. Then depending on the partial decoded instruction, more parts
 might need to be fetched.
 
 Besides executing instructions, `rvm' also emulates the general
-registers, flags, and memory. The memory is implemented via a hash
-table and supports full 32-bit range address.
+registers, flags, stack, and memory. The memory is implemented via a
+hash table and supports full 32-bit range address.
 
 Sample code files that `rvm' takes are as follow:
 
@@ -61,7 +61,23 @@ Machines.
 
 2. DIRECTORY CONTENTS
 -----------------------
+README          This file.
+Makefile        Makefile to build `rvm' and its test cases.
 
+type.h          Define common data types used in `rvm'.
+mem.[hc]        Memory emulation.
+cpu.[hc]        CPU states, such as registers, flags, stack.
+code.[hc]       Code reader, reads code from file or buffer.
+micro_table.h   Opcode map table roughly equivalent to
+                "Table A-2. One-byte Opcode Map" in the Intel manual.
+cycle.[hc]      Main implementation of the interpreter.
+rvm.c           Front-end for the `rvm'.
+
+test_*.c        Unit test cases for the above components.
+sample/         Sample machine code file used for testing.
+
+fct.h           FCTX - Fast C Unit Testing in a Header.
+hashtable.[hc]  C Hash Table by Christopher Clark.
 
 
 3. HOW TO BUILD, TEST, RUN
