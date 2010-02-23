@@ -107,6 +107,9 @@ cases. It has been tested on the following configurations:
   * Linux 2.6.31
     * GCC 4.4.3
     * GNU make 3.81
+  * Cygwin 1.7.1 (Windows 7)
+    * GCC 4.3.4
+    * GNU make 3.81
 
 To build the test cases and run them:
   $ make test
