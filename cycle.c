@@ -124,7 +124,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
   /* Load operands */
   switch (micro.load) {
-  case L_MODRM: /* Involves register or memory */
+  case L_MODRM: /* Has ModR/M in the instruction. */
     /* Fetch ModR/M */
     if (!rvm_code_read(rd, &modrm)) return FAIL;
     /* Slice it. */
@@ -135,8 +135,8 @@ int rvm_cycle_step(rvm_cycle *runner) {
     /* Look up effective address  */
     if (mod < 0x03) { /* Applies to only mod with 0x00, 0x01, 0x02. */
       switch ((mod << 3) | rm) {
-      case 0x0c:
-        /* [--][--]+disp8 */
+      case 0x0c: /* [--][--]+disp8 */
+        /* Refer to Table 2-3. 32-Bit Addressing Forms with the SIB Byte. */
         /* Fetch SIB */
         if (!rvm_code_read(rd, &sib)) return FAIL;
         /* Slice it */
@@ -173,11 +173,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
   DISPATCH_EXTRA:
     /* Extra */
     switch (micro.extra) {
-    case M_EA:
+    case M_EA: /* ModR/M points to effective address. */
       op1.d = offset;
       break;
 
-    case M_GRP:
+    case M_GRP: /* ModR/M points to extend opcode groups. */
       /* Fetch the corresponding group micro instruction. */
       memcpy(&micro, &rvm_micro_group_table[micro.process][reg], sizeof(micro));
       /* Save the mnemonic of the instruction. */
@@ -185,7 +185,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
       goto DISPATCH_EXTRA;
       break;
 
-    case M_EbIb:
+    case M_EbIb: /* ModR/M specifies a register or memory (Bit8u), and has immediate data (Bit8u) following it. */
       /* Second operand. */
       if (!rvm_code_read8s(rd, &disp8)) return FAIL;
       op2.d = disp8;
@@ -194,7 +194,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
       else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
       break;
 
-    case M_EdIb:
+    case M_EdIb: /* ModR/M specifies a register or memory (Bit32u), and has immediate data (Bit8u) following it. */
       /* Second operand. */
       if (!rvm_code_read8s(rd, &disp8)) return FAIL;
       op2.d = disp8;
@@ -203,7 +203,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
       else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
       break;
 
-    case M_Gd:
+    case M_Gd: /* ModR/M specifies a register (Bit32u). */
       op1.d = CPU.gregs[reg].d;
       break;
 
@@ -214,17 +214,17 @@ int rvm_cycle_step(rvm_cycle *runner) {
     }
     break;
 
-  case L_REGd:
+  case L_REGd: /* Operand is a register (Bit32u) specified in table. */
     op1.d = CPU.gregs[micro.extra].d;
     break;
 
-  case L_REGbIb:
+  case L_REGbIb: /* Operands are register (Bit8u) specified in table and an immediate data (Bit8u). */
     if (!rvm_code_read8s(rd, &disp8)) return FAIL;
     op2.d = disp8;
     op1.d = CPU.gregs[micro.extra].d;
     break;
 
-  case L_POP:
+  case L_POP: /* Pop value from stack to the first operand. */
     if (!rvm_cpu_pop32u(&op1.d)) return FAIL;
     break;
 
@@ -239,7 +239,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
   /* Process operands */
   switch (micro.process) {
-  case P_ANDd:
+  case P_ANDd: /* Logical AND (Bit32u). */
     dst.d = op1.d & op2.d;
     rvm_cpu_set_flag(FLAG_CF, 0);
     rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
@@ -248,7 +248,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     op1.d = dst.d;
     break;
 
-  case P_SUBd:
+  case P_SUBd: /* Logical SUB (Bit32u). */
     dst.d = op1.d - op2.d;
     rvm_cpu_set_flag(FLAG_CF, op1.d < op2.d);
     rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
@@ -257,7 +257,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     op1.d = dst.d;
     break;
 
-  case P_SARd:
+  case P_SARd: /* Arithmetic right shift (Bit32u). */
     __asm__ __volatile__("sar %%cl,%0"
                          :"=r"(dst.d)
                          :"0"(op1.d), "c"(op2.d)
@@ -269,7 +269,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     op1.d = dst.d;
     break;
 
-  case P_XORb:
+  case P_XORb: /* Logical XOR (Bit8u). */
     dst.d = op1.d ^ op2.d;
     rvm_cpu_set_flag(FLAG_CF, 0);
     rvm_cpu_set_flag(FLAG_ZF, dst.b == 0);
@@ -278,7 +278,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     op1.d = dst.d;
     break;
 
-  case P_CMPb:
+  case P_CMPb: /* CMP (Bit8u). */
     dst.b = op1.b - op2.b;
     rvm_cpu_set_flag(FLAG_CF, op1.b < op2.b);
     rvm_cpu_set_flag(FLAG_ZF, dst.b == 0);
@@ -286,7 +286,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     rvm_cpu_set_flag(FLAG_OF, ((op1.b ^ op2.b) & (op1.b ^ dst.b)) & 0x80);
     break;
 
-  case P_INCd:
+  case P_INCd: /* INC (Bit32u). */
     dst.d = op1.d + 1;
     /* No change in CF. */
     rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
@@ -306,11 +306,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
   /* Save operands */
   switch (micro.save) {
-  case S_Gd: /* Destination is a dword general register. */
+  case S_Gd: /* Destination is a general register (Bit32u) specified in ModR/M. */
     CPU.gregs[reg].d = op1.d;
     break;
 
-  case S_Ed:
+  case S_Ed: /* Destination is either a register or memory specified in ModR/M. */
     if (mod == 0x03) CPU.gregs[rm].d = op1.d; /* Register. */
     else rvm_mem_save32u(offset, op1.d); /* Effective address memory. */
     break;
@@ -319,10 +319,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
     rvm_cpu_push32u(op1.d);
     break;
 
-  case S_REGd:
+  case S_REGd: /* Save destination to register (Bit32u) specified in table. */
     CPU.gregs[micro.extra].d = op1.d;
+    break;
 
-  case S_REGb:
+  case S_REGb: /* Save destination to register (Bit8u) specified in table. */
     CPU.gregs[micro.extra].b[0] = op1.b;
     break;
 

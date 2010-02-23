@@ -1,3 +1,11 @@
+/**
+ * Implementation for memory.
+ *
+ * A hash table is used to emulate the memory. The address (Bit32u) is
+ * the key to the hash table, while the content (Bit32u) of the memory
+ * is the value of the hash table.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "mem.h"

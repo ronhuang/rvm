@@ -1,6 +1,17 @@
 #ifndef __MICRO_TABLE_H__
 #define __MICRO_TABLE_H__
 
+/**
+ * Contains an incomplete table roughly equivalent to "Table
+ * A-2. One-byte Opcode Map" in the Intel manual.
+ *
+ * Each entry in rvm_micro_table corresponds to an opcode or points to
+ * an opcode extension group.
+ *
+ * Each entry in rvm_micro_group_table corresponds to an opcode
+ * extension group, which includes the opcodes for that group.
+ */
+
 #include "type.h"
 #include "cpu.h"
 

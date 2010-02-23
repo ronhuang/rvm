@@ -1,11 +1,16 @@
 #ifndef __MEM_H__
 #define __MEM_H__
 
+/**
+ * Header file for memory.
+ */
+
 #include "type.h"
 
 
 /**
  * Reset memory.
+ * \return SUCCESS if reads a byte from source, otherwise FAIL.
  */
 int rvm_mem_reset(void);
 
