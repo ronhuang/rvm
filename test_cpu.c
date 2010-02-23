@@ -44,4 +44,51 @@ FCTMF_FIXTURE_SUITE_BGN(cpu_suite) {
     fct_chk_eq_int(disp32, 0xFEEDBEEF);
   } FCT_TEST_END();
 
+  FCT_TEST_BGN(cpu_flags_mask) {
+    fct_chk_eq_int(FLAG_CF, 0x00000001);
+    fct_chk_eq_int(FLAG_ZF, 0x00000040);
+    fct_chk_eq_int(FLAG_SF, 0x00000080);
+    fct_chk_eq_int(FLAG_OF, 0x00000800);
+  } FCT_TEST_END();
+
+  FCT_TEST_BGN(cpu_flags_set) {
+    rvm_cpu_set_flag(FLAG_CF, 1);
+    fct_chk_eq_int(CPU.flags & FLAG_CF, FLAG_CF);
+    rvm_cpu_set_flag(FLAG_ZF, 1);
+    fct_chk_eq_int(CPU.flags & FLAG_ZF, FLAG_ZF);
+    rvm_cpu_set_flag(FLAG_SF, 1);
+    fct_chk_eq_int(CPU.flags & FLAG_SF, FLAG_SF);
+    rvm_cpu_set_flag(FLAG_OF, 1);
+    fct_chk_eq_int(CPU.flags & FLAG_OF, FLAG_OF);
+
+    rvm_cpu_set_flag(FLAG_CF, 0);
+    fct_chk_eq_int(CPU.flags & FLAG_CF, 0x00000000);
+    rvm_cpu_set_flag(FLAG_ZF, 0);
+    fct_chk_eq_int(CPU.flags & FLAG_ZF, 0x00000000);
+    rvm_cpu_set_flag(FLAG_SF, 0);
+    fct_chk_eq_int(CPU.flags & FLAG_SF, 0x00000000);
+    rvm_cpu_set_flag(FLAG_OF, 0);
+    fct_chk_eq_int(CPU.flags & FLAG_OF, 0x00000000);
+  } FCT_TEST_END();
+
+  FCT_TEST_BGN(cpu_flags_get) {
+    CPU.flags |= FLAG_CF;
+    fct_chk(rvm_cpu_get_flag(FLAG_CF));
+    CPU.flags |= FLAG_ZF;
+    fct_chk(rvm_cpu_get_flag(FLAG_ZF));
+    CPU.flags |= FLAG_SF;
+    fct_chk(rvm_cpu_get_flag(FLAG_SF));
+    CPU.flags |= FLAG_OF;
+    fct_chk(rvm_cpu_get_flag(FLAG_OF));
+
+    CPU.flags &= ~FLAG_CF;
+    fct_chk(!rvm_cpu_get_flag(FLAG_CF));
+    CPU.flags &= ~FLAG_ZF;
+    fct_chk(!rvm_cpu_get_flag(FLAG_ZF));
+    CPU.flags &= ~FLAG_SF;
+    fct_chk(!rvm_cpu_get_flag(FLAG_SF));
+    CPU.flags &= ~FLAG_OF;
+    fct_chk(!rvm_cpu_get_flag(FLAG_OF));
+  } FCT_TEST_END();
+
 } FCTMF_FIXTURE_SUITE_END();

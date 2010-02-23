@@ -19,6 +19,15 @@ enum {
   REG_CS, REG_SS, REG_DS, REG_ES, REG_FS, REG_GS
 };
 
+/**
+ * Flags masks.
+ */
+enum {
+  FLAG_CF = 1 << 0,
+  FLAG_ZF = 1 << 6,
+  FLAG_SF = 1 << 7,
+  FLAG_OF = 1 << 11,
+};
 
 /**
  * Contains the necessary registers and flags for IA-32.
@@ -69,6 +78,17 @@ extern struct rvm_cpu_t CPU;
 #define reg_fs CPU.sregs[REG_FS]
 #define reg_gs CPU.sregs[REG_GS]
 
+
+/**
+ * Convenient macros for accessing flags.
+ */
+#define rvm_cpu_set_flag(mask, bit)                                     \
+  do {                                                                  \
+  if (bit) CPU.flags |= mask;                                           \
+  else CPU.flags &= ~mask;                                              \
+  } while (0)
+
+#define rvm_cpu_get_flag(mask) ((CPU.flags & mask) ? 1 : 0)
 
 /**
  * Reset the CPU.
