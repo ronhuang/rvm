@@ -39,6 +39,7 @@ enum {
   L_MODRM,       /** Operands are in ModR/M. */
   L_REGd,        /** Operands is register specified in table (Bit32u). */
   L_REGbIb,      /** Operands is register specified in table (Bit8u) and immediate data (Bit8u). */
+  L_POP,         /** Operand is from stack. */
 };
 
 /* Save field. */
@@ -48,22 +49,28 @@ enum {
   S_Ed,          /** Register or memory specified in ModR/M (Bit32u). */
   S_PUSH,        /** Push data to stack. */
   S_REGb,        /** Register specified in table (Bit8u). */
+  S_REGd,        /** Register specified in table (Bit32u). */
 };
 
 /* Extra field. */
 enum {
   M_EMPTY = 0,   /** Empty. */
   M_EA,          /** Effective address. */
-  M_EdIb,        /** Register or memory, followed by immediate data. */
+  M_EdIb,        /** Register or memory (Bit32u), followed by immediate data (Bit8u). */
+  M_EbIb,        /** Register or memory (Bit8u), followed by immediate data (Bit8u). */
+  M_Gd,          /** General register. */
   M_GRP,         /** Opcode extension group. */
 };
 
 /* Process field. */
 enum {
   P_NOP = 0,     /** Skip this. */
-  P_AND,         /** Logical AND. */
-  P_SAR,         /** Arithmetic right shift. */
+  P_ANDd,        /** Logical AND (Bit32u). */
+  P_SUBd,        /** Logical SUB (Bit32u). */
+  P_SARd,         /** Arithmetic right shift (Bit32u). */
   P_XORb,        /** Logical XOR (Bit8u). */
+  P_CMPb,        /** CMP (Bit8u). */
+  P_INCd,        /** INC (Bit32u). */
 };
 
 

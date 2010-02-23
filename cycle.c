@@ -100,7 +100,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     Bit16s ws;
     Bit32u d;
     Bit32s ds;
-  } op1, op2, imm;
+  } op1, op2, dst;
 
   /* Prepare. */
   if (!runner || !runner->reader) {
@@ -185,6 +185,15 @@ int rvm_cycle_step(rvm_cycle *runner) {
       goto DISPATCH_EXTRA;
       break;
 
+    case M_EbIb:
+      /* Second operand. */
+      if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+      op2.d = disp8;
+      /* First operand. */
+      if (mod == 0x03) op1.d = CPU.gregs[rm].b[0]; /* General register. */
+      else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
+      break;
+
     case M_EdIb:
       /* Second operand. */
       if (!rvm_code_read8s(rd, &disp8)) return FAIL;
@@ -192,6 +201,10 @@ int rvm_cycle_step(rvm_cycle *runner) {
       /* First operand. */
       if (mod == 0x03) op1.d = CPU.gregs[rm].d; /* General register. */
       else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
+      break;
+
+    case M_Gd:
+      op1.d = CPU.gregs[reg].d;
       break;
 
     default:
@@ -211,6 +224,10 @@ int rvm_cycle_step(rvm_cycle *runner) {
     op1.d = CPU.gregs[micro.extra].d;
     break;
 
+  case L_POP:
+    if (!rvm_cpu_pop32u(&op1.d)) return FAIL;
+    break;
+
   case L_NOP:
     break;
 
@@ -222,22 +239,60 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
   /* Process operands */
   switch (micro.process) {
-  case P_AND:
-    op1.d &= op2.d;
-    /* FIXME: set flags. */
+  case P_ANDd:
+    dst.d = op1.d & op2.d;
+    rvm_cpu_set_flag(FLAG_CF, 0);
+    rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.d & 0x80000000);
+    rvm_cpu_set_flag(FLAG_OF, 0);
+    op1.d = dst.d;
     break;
 
-  case P_SAR:
+  case P_SUBd:
+    dst.d = op1.d - op2.d;
+    rvm_cpu_set_flag(FLAG_CF, op1.d < op2.d);
+    rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.d & 0x80000000);
+    rvm_cpu_set_flag(FLAG_OF, ((op1.b ^ op2.b) & (op1.b ^ dst.b)) & 0x80000000);
+    op1.d = dst.d;
+    break;
+
+  case P_SARd:
     __asm__ __volatile__("sar %%cl,%0"
-                         :"=a"(op1.d)
+                         :"=r"(dst.d)
                          :"0"(op1.d), "c"(op2.d)
                          );
-    /* FIXME: set flags. */
+    rvm_cpu_set_flag(FLAG_CF, (((Bit32s) op1.d) >> (op2.d - 1)) & 1);
+    rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.d & 0x80000000);
+    rvm_cpu_set_flag(FLAG_OF, 0);
+    op1.d = dst.d;
     break;
 
   case P_XORb:
-    op1.d ^= op2.d;
-    /* FIXME: set flags. */
+    dst.d = op1.d ^ op2.d;
+    rvm_cpu_set_flag(FLAG_CF, 0);
+    rvm_cpu_set_flag(FLAG_ZF, dst.b == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.b & 0x80);
+    rvm_cpu_set_flag(FLAG_OF, 0);
+    op1.d = dst.d;
+    break;
+
+  case P_CMPb:
+    dst.b = op1.b - op2.b;
+    rvm_cpu_set_flag(FLAG_CF, op1.b < op2.b);
+    rvm_cpu_set_flag(FLAG_ZF, dst.b == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.b & 0x80);
+    rvm_cpu_set_flag(FLAG_OF, ((op1.b ^ op2.b) & (op1.b ^ dst.b)) & 0x80);
+    break;
+
+  case P_INCd:
+    dst.d = op1.d + 1;
+    /* No change in CF. */
+    rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.d & 0x80000000);
+    rvm_cpu_set_flag(FLAG_OF, dst.d == 0x80000000);
+    op1.d = dst.d;
     break;
 
   case P_NOP:
@@ -263,6 +318,9 @@ int rvm_cycle_step(rvm_cycle *runner) {
   case S_PUSH: /* Push operand to stack. */
     rvm_cpu_push32u(op1.d);
     break;
+
+  case S_REGd:
+    CPU.gregs[micro.extra].d = op1.d;
 
   case S_REGb:
     CPU.gregs[micro.extra].b[0] = op1.b;
