@@ -4,7 +4,8 @@ OBJS += code.o cycle.o cpu.o mem.o
 OBJS += hashtable.o
 TEST_OBJS += test_type.o test_code.o test_cycle.o test_cpu.o test_mem.o
 CC = gcc
-CFLAGS += -m32 -lm
+CFLAGS += -m32
+LDFLAGS += -lm
 
 
 .PHONY: all
