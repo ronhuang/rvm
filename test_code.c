@@ -155,10 +155,10 @@ FCTMF_FIXTURE_SUITE_BGN(code_suite) {
     fct_req(ret == SUCCESS);
 
     rvm_code_read8s(reader, &code.bs);
-    fct_chk_eq_int(code.bs, -16);
+    fct_chk_eq_int(code.bs, -119);
 
     rvm_code_read32u(reader, &code.d);
-    fct_chk_eq_int(code.d, 0xFEEDBEEF);
+    fct_chk_eq_int(code.d, 0x04ec83e5);
   } FCT_TEST_END();
 
   FCT_TEST_BGN(code_read_buffer) {
