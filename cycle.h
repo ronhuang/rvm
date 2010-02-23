@@ -40,11 +40,19 @@ int rvm_cycle_set_code(rvm_cycle *runner, rvm_code *reader);
 int rvm_cycle_step(rvm_cycle *runner);
 
 /**
- * Retrieve the instruction just executed.
+ * Retrieve the mnemonic of instruction just executed.
  * \param [in] runner an instance of the instruction runner.
- * \param [out] inst an instance of the instruction.
+ * \param [out] mnemonic buffer to store the mnemonic.
+ *                       It will always be null-terminated.
+ * \param [in] size size of the buffer.
  * \return SUCCESS if cycles an instruction, otherwise FAIL.
  */
-int rvm_cycle_get_executed_instruction(rvm_cycle *runner, rvm_inst *inst);
+int rvm_cycle_get_executed_instruction(rvm_cycle *runner, char *mnemonic, int size);
+
+/**
+ * Retrieve the number of executed instructions.
+ * \return Number of executed instructions.
+ */
+int rvm_cycle_get_steps(rvm_cycle *runner);
 
 #endif /* __CYCLE_H__ */

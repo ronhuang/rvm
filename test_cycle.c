@@ -243,7 +243,7 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
 
   FCT_TEST_BGN(cycle_step_mnemonic) {
     int result;
-    rvm_inst inst;
+    char mnemonic[10];
     const char *mnemonics[] = {
       "lea", "and", "push", "sar", "xor", "mov", "inc", "sub", "cmp", "pop", NULL
     };
@@ -255,9 +255,19 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
     for (m = mnemonics; *m != NULL; m++) {
       result = rvm_cycle_step(runner);
       fct_chk_eq_int(result, SUCCESS);
-      rvm_cycle_get_executed_instruction(runner, &inst);
-      fct_chk_eq_str(inst.mnemonic, *m);
+      rvm_cycle_get_executed_mnemonic(runner, &mnemonic, 10);
+      fct_chk_eq_str(mnemonic, *m);
     }
+  } FCT_TEST_END();
+
+  FCT_TEST_BGN(cycle_steps) {
+    int result;
+
+    /* Set source. */
+    rvm_code_set_file_source(reader, "sample/cycle_basic");
+
+    while (SUCCESS == rvm_cycle_step(runner));
+    fct_chk_eq_int(10, rvm_cycle_get_steps(runner));
   } FCT_TEST_END();
 
 } FCTMF_FIXTURE_SUITE_END();

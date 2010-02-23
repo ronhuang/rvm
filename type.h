@@ -84,10 +84,4 @@ typedef struct rvm_micro_t {
 } rvm_micro;
 
 
-/** Define instruction */
-typedef struct rvm_inst_t {
-  const char *mnemonic;
-} rvm_inst;
-
-
 #endif /* __TYPE_H__ */

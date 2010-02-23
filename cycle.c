@@ -27,7 +27,8 @@ static Bit32u *SCALED_INDEX[] = {
  */
 struct rvm_cycle_t {
   rvm_code *reader;
-  rvm_inst inst;
+  char mnemonic[16];
+  int steps;
 };
 
 /**
@@ -107,7 +108,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     return FAIL;
   }
   rd = runner->reader;
-  memset(&runner->inst, 0, sizeof(rvm_inst));
+  memset(&runner->mnemonic, 0, sizeof(runner->mnemonic));
 
   /* Read next byte from code. */
   if (!rvm_code_read(rd, &opcode)) return FAIL;
@@ -120,7 +121,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
   /* Fetch the corresponding micro instruction. */
   memcpy(&micro, &rvm_micro_table[opcode], sizeof(micro));
   /* Save the mnemonic of the instruction. */
-  runner->inst.mnemonic = micro.mnemonic;
+  strncpy(runner->mnemonic, micro.mnemonic, sizeof(runner->mnemonic) - 1);
 
   /* Load operands */
   switch (micro.load) {
@@ -181,7 +182,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
       /* Fetch the corresponding group micro instruction. */
       memcpy(&micro, &rvm_micro_group_table[micro.process][reg], sizeof(micro));
       /* Save the mnemonic of the instruction. */
-      runner->inst.mnemonic = micro.mnemonic;
+      strncpy(runner->mnemonic, micro.mnemonic, sizeof(runner->mnemonic) - 1);
       goto DISPATCH_EXTRA;
       break;
 
@@ -336,21 +337,39 @@ int rvm_cycle_step(rvm_cycle *runner) {
     return FAIL;
   }
 
+  /* Keep track how many instruction executed. */
+  runner->steps++;
+
   return SUCCESS;
 }
 
 /**
  * Retrieve the instruction just executed.
  * \param [in] runner an instance of the instruction runner.
- * \param [out] inst an instance of the instruction.
+ * \param [out] mnemonic buffer to store the mnemonic.
+ *                       It will always be null-terminated.
+ * \param [in] size size of the buffer.
  * \return SUCCESS if cycles an instruction, otherwise FAIL.
  */
-int rvm_cycle_get_executed_instruction(rvm_cycle *runner, rvm_inst *inst) {
+int rvm_cycle_get_executed_mnemonic(rvm_cycle *runner, char *mnemonic, int size) {
   /* Prepare. */
-  if (!runner) {
+  if (!runner || !mnemonic || size < 1) {
     return FAIL;
   }
-  memcpy(inst, &runner->inst, sizeof(rvm_inst));
+  strncpy(mnemonic, runner->mnemonic, size - 1); /* Reserve one byte for null. */
 
   return SUCCESS;
+}
+
+/**
+ * Retrieve the number of executed instructions.
+ * \return Number of executed instructions.
+ */
+int rvm_cycle_get_steps(rvm_cycle *runner) {
+  /* Prepare. */
+  if (!runner) {
+    return 0;
+  }
+
+  return runner->steps;
 }
