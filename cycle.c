@@ -207,8 +207,8 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
   case L_REGbIb:
     if (!rvm_code_read8s(rd, &disp8)) return FAIL;
-    op2.b = disp8;
-    op1.b = CPU.gregs[micro.extra].b[0];
+    op2.d = disp8;
+    op1.d = CPU.gregs[micro.extra].d;
     break;
 
   case L_NOP:
@@ -236,7 +236,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     break;
 
   case P_XORb:
-    op1.b ^= op2.b;
+    op1.d ^= op2.d;
     /* FIXME: set flags. */
     break;
 
