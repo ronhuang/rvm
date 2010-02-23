@@ -23,7 +23,10 @@ struct key {
  * Value structures for hashtable.
  */
 struct value {
-  Bit8u data;
+  union {
+    Bit8u b[4];
+    Bit32u d;
+  } data;
 };
 
 /**
@@ -78,17 +81,21 @@ int rvm_mem_reset(void) {
 
 
 /**
- * Save content of the field (Bit8u) to memory.
+ * Save content of the field (Bit32u) to memory.
  * \param address the address of the memory to save to.
  * \param field the field containing the data to save.
  * \return SUCCESS if reads a byte from source, otherwise FAIL.
  */
-int rvm_mem_save8u(Bit32u address, Bit8u field) {
+int rvm_mem_save32u(Bit32u address, Bit32u field) {
   struct key *k;
   struct value *v;
 
   if (NULL == MEM.h) {
     fprintf(stderr, "hashtable not initialized.\n");
+    return FAIL;
+  }
+  if (address != (address & 0xfffffffc)) {
+    /* Alignment */
     return FAIL;
   }
 
@@ -103,60 +110,12 @@ int rvm_mem_save8u(Bit32u address, Bit8u field) {
   }
 
   k->address = address;
-  v->data = field;
+  v->data.d = field;
 
   if (!insert_some(MEM.h, k, v)) {
     free(k);
     free(v);
     return FAIL;
-  }
-
-  return SUCCESS;
-}
-
-
-/**
- * Save content of the field (Bit32u) to memory.
- * \param address the address of the memory to save to.
- * \param field the field containing the data to save.
- * \return SUCCESS if reads a byte from source, otherwise FAIL.
- */
-int rvm_mem_save32u(Bit32u address, Bit32u field) {
-  if (SUCCESS == rvm_mem_save8u(address, (field & 0xff000000) >> 24) &&
-      SUCCESS == rvm_mem_save8u(address + 1, (field & 0x00ff0000) >> 16) &&
-      SUCCESS == rvm_mem_save8u(address + 2, (field & 0x0000ff00) >> 8) &&
-      SUCCESS == rvm_mem_save8u(address + 3, field & 0x000000ff)) {
-    return SUCCESS;
-  }
-  return FAIL;
-}
-
-
-/**
- * Load memory content (Bit8u) to field
- * \param address the address of the memory to load.
- * \param field the field to load the content of the memory to.
- * \return SUCCESS if reads a byte from source, otherwise FAIL.
- */
-int rvm_mem_load8u(Bit32u address, Bit8u *field) {
-  static struct key k;
-  struct value *v;
-
-  if (NULL == MEM.h) {
-    fprintf(stderr, "hashtable not initialized.\n");
-    return FAIL;
-  }
-  if (NULL == field) {
-    return FAIL;
-  }
-
-  k.address = address;
-  v = search_some(MEM.h, &k);
-  if (v) {
-    *field = v->data;
-  }
-  else {
-    *field = 0;
   }
 
   return SUCCESS;
@@ -170,14 +129,29 @@ int rvm_mem_load8u(Bit32u address, Bit8u *field) {
  * \return SUCCESS if reads a byte from source, otherwise FAIL.
  */
 int rvm_mem_load32u(Bit32u address, Bit32u *field) {
-  Bit8u d0, d1, d2, d3;
+  static struct key k;
+  struct value *v;
 
-  if (SUCCESS == rvm_mem_load8u(address, &d0) &&
-      SUCCESS == rvm_mem_load8u(address + 1, &d1) &&
-      SUCCESS == rvm_mem_load8u(address + 2, &d2) &&
-      SUCCESS == rvm_mem_load8u(address + 3, &d3)) {
-    *field = (d0 << 24) | (d1 << 16) | (d2 << 8) | d3;
-    return SUCCESS;
+  if (NULL == MEM.h) {
+    fprintf(stderr, "hashtable not initialized.\n");
+    return FAIL;
   }
-  return FAIL;
+  if (address != (address & 0xfffffffc)) {
+    /* Alignment */
+    return FAIL;
+  }
+  if (NULL == field) {
+    return FAIL;
+  }
+
+  k.address = address;
+  v = search_some(MEM.h, &k);
+  if (v) {
+    *field = v->data.d;
+  }
+  else {
+    *field = 0;
+  }
+
+  return SUCCESS;
 }

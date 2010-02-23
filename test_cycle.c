@@ -12,7 +12,7 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
     /* Setup environment. */
     rvm_cpu_reset();
     rvm_mem_reset();
-    reg_esp = 0xFEEDBEEF;
+    reg_esp = 0xFEEDBEEC;
 
     reader = rvm_code_new();
     runner = rvm_cycle_new();
