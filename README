@@ -61,6 +61,7 @@ Machines.
 
 2. DIRECTORY CONTENTS
 -----------------------
+
 README          This file.
 Makefile        Makefile to build `rvm' and its test cases.
 
@@ -83,6 +84,27 @@ hashtable.[hc]  C Hash Table by Christopher Clark.
 3. HOW TO BUILD, TEST, RUN
 ----------------------------
 
+This package comes with a Makefile to build `rvm' and its test
+cases. It has been tested on the following configurations:
+  * Mac OS X 10.6.2
+    * GCC 4.2.1
+    * GNU make 3.81
+  * Linux 2.6.31
+    * GCC 4.4.3
+    * GNU make 3.81
+
+To build the test cases and run them:
+  $ make test
+  $ ./test_rvm
+
+To build and run `rvm':
+  $ make
+  $ ./rvm <insert code filename>
+
+To run `rvm' with the sample machine code files that come with this
+package, you can:
+  $ ./rvm sample/cycle_basic
+  $ ./rvm sample/code_single_line
 
 
 4. LICENSE
