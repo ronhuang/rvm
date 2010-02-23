@@ -1,4 +1,25 @@
+#include <stdio.h>
 #include "cpu.h"
+
+
+static const char DUMP_TEMPLATE[] =
+  "eax           0x%08x\n"
+  "ecx           0x%08x\n"
+  "edx           0x%08x\n"
+  "ebx           0x%08x\n"
+  "esp           0x%08x\n"
+  "ebp           0x%08x\n"
+  "esi           0x%08x\n"
+  "edi           0x%08x\n"
+  "eip           0x%08x\n"
+  "eflags        0x%08x\n"
+  "cs            0x%04x\n"
+  "ss            0x%04x\n"
+  "ds            0x%04x\n"
+  "es            0x%04x\n"
+  "fs            0x%04x\n"
+  "gs            0x%04x\n";
+
 
 /**
  * Global cpu state.
@@ -44,4 +65,17 @@ int rvm_cpu_pop32u(Bit32u *field) {
   }
   reg_esp += 4;
   return SUCCESS;
+}
+
+
+/**
+ * Dump the registers and flags to stdout.
+ * \return SUCCESS if the source is successfully set, otherwise FAIL.
+ */
+int rvm_cpu_dump(void) {
+  printf(DUMP_TEMPLATE,
+         reg_eax, reg_ecx, reg_edx, reg_ebx,
+         reg_esp, reg_ebp, reg_esi, reg_edi,
+         CPU.ip.d, CPU.flags,
+         reg_cs, reg_ss, reg_ds, reg_es, reg_fs, reg_gs);
 }

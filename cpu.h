@@ -119,8 +119,10 @@ int rvm_cpu_pop32u(Bit32u *field);
 
 
 /**
- * Dump the registers and flags.
+ * Dump the registers and flags to stdout.
+ * \return SUCCESS if the source is successfully set, otherwise FAIL.
  */
+int rvm_cpu_dump(void);
 
 
 #endif /* __CPU_H__ */
