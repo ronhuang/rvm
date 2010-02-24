@@ -164,6 +164,46 @@ int rvm_cycle_step(rvm_cycle *runner) {
     /* Look up effective address  */
     if (mod < 0x03) { /* Applies to only mod with 0x00, 0x01, 0x02. */
       switch ((mod << 3) | rm) {
+      case 0x00: /* [EAX] */
+        offset = reg_eax;
+        break;
+
+      case 0x01: /* [ECX] */
+        offset = reg_ecx;
+        break;
+
+      case 0x02: /* [EDX] */
+        offset = reg_edx;
+        break;
+
+      case 0x03: /* [EBX] */
+        offset = reg_ebx;
+        break;
+
+      case 0x04: /* [--][--] */
+        /* Refer to Table 2-3. 32-Bit Addressing Forms with the SIB Byte. */
+        /* Fetch SIB */
+        if (!rvm_code_read(rd, &sib)) return FAIL;
+        /* Slice it */
+        scale = sib >> 6;
+        index = (sib >> 3) & 0x07;
+        base = sib & 0x07;
+
+        switch (base) {
+        case 0x00: offset = reg_eax; break;
+        case 0x01: offset = reg_ecx; break;
+        case 0x02: offset = reg_edx; break;
+        case 0x03: offset = reg_ebx; break;
+        case 0x04: offset = reg_esp; break;
+        case 0x05:
+          if (mod == 0x00) rvm_code_read32u(rd, &offset);
+          else offset = reg_ebp; /* FIXME: incorrect implementation. */
+        case 0x06: offset = reg_esi; break;
+        case 0x07: offset = reg_edi; break;
+        }
+        offset += *SCALED_INDEX[index] << scale;
+        break;
+
       case 0x0c: /* [--][--]+disp8 */
         /* Refer to Table 2-3. 32-Bit Addressing Forms with the SIB Byte. */
         /* Fetch SIB */
@@ -190,6 +230,21 @@ int rvm_cycle_step(rvm_cycle *runner) {
         /* Fetch disp8 */
         if (!rvm_code_read8s(rd, &disp8)) return FAIL;
         offset += disp8;
+        break;
+
+      case 0x0d: /* [EBP]+disp8 */
+        if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+        offset += reg_ebp + disp8;
+        break;
+
+      case 0x0e: /* [ESI]+disp8 */
+        if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+        offset += reg_esi + disp8;
+        break;
+
+      case 0x0f: /* [EDI]+disp8 */
+        if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+        offset += reg_edi + disp8;
         break;
 
       case 0x10: /* [EAX]+disp32 */

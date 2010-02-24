@@ -298,4 +298,27 @@ FCTMF_FIXTURE_SUITE_BGN(cycle_suite) {
     fct_chk_eq_int(10, rvm_cycle_get_steps(runner));
   } FCT_TEST_END();
 
+  FCT_TEST_BGN(cycle_step_mnemonic2) {
+    int result;
+    char mnemonic[10];
+    int step = 0;
+    const char *mnemonics[] = {
+      "push", "mov", "and", "sub", "mov", "mov", "lea", "mov",
+      "add", "shl", "add", "mov", "mov", "add", "test", "mov", "mov",
+      "push", "mov", "push", "sub", "pop", "lea", "mov", "mov",
+      "add", "pop", NULL
+    };
+    const char **m;
+
+    /* Set source. */
+    rvm_code_set_file_source(reader, "sample/cycle_more");
+
+    for (m = mnemonics; *m != NULL; m++) {
+      result = rvm_cycle_step(runner);
+      fct_chk_eq_int(result, SUCCESS);
+      rvm_cycle_get_executed_mnemonic(runner, &mnemonic, 10);
+      fct_chk_eq_str(mnemonic, *m);
+    }
+  } FCT_TEST_END();
+
 } FCTMF_FIXTURE_SUITE_END();
