@@ -268,3 +268,23 @@ int rvm_code_read32u(rvm_code *reader, Bit32u *code) {
 
   return SUCCESS;
 }
+
+
+/**
+ * Read a Bit32s of code from the source.
+ * \param [in] reader an instance of the code reader.
+ * \param [out] code to store the read code.
+ * \return SUCCESS if reads a byte from source, otherwise FAIL.
+ */
+int rvm_code_read32s(rvm_code *reader, Bit32s *code) {
+  Bit32u p0;
+
+  if (!reader || !code) {
+    return FAIL;
+  }
+
+  if (!rvm_code_read32u(reader, &p0)) return FAIL;
+  *code = (Bit32s)p0;
+
+  return SUCCESS;
+}

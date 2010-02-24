@@ -192,6 +192,45 @@ int rvm_cycle_step(rvm_cycle *runner) {
         offset += disp8;
         break;
 
+      case 0x10: /* [EAX]+disp32 */
+        if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+        offset += reg_eax + disp32;
+        break;
+
+      case 0x11: /* [ECX]+disp32 */
+        if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+        offset += reg_ecx + disp32;
+        break;
+
+      case 0x12: /* [EDX]+disp32 */
+        if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+        offset += reg_edx + disp32;
+        break;
+
+      case 0x13: /* [EBX]+disp32 */
+        if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+        offset += reg_ebx + disp32;
+        break;
+
+      case 0x14: /* [--][--]+disp32 */
+        /* IMPLEMENT ME */
+        break;
+
+      case 0x15: /* [EBP]+disp32 */
+        if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+        offset += reg_ebp + disp32;
+        break;
+
+      case 0x16: /* [ESI]+disp32 */
+        if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+        offset += reg_esi + disp32;
+        break;
+
+      case 0x17: /* [EDI]+disp32 */
+        if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+        offset += reg_edi + disp32;
+        break;
+
       default:
         /* Unsupported effective address. */
         assert(0);

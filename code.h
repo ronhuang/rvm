@@ -109,4 +109,13 @@ int rvm_code_read8s(rvm_code *reader, Bit8s *code);
 int rvm_code_read32u(rvm_code *reader, Bit32u *code);
 
 
+/**
+ * Read a Bit32s of code from the source.
+ * \param [in] reader an instance of the code reader.
+ * \param [out] code to store the read code.
+ * \return SUCCESS if reads a byte from source, otherwise FAIL.
+ */
+int rvm_code_read32s(rvm_code *reader, Bit32s *code);
+
+
 #endif /* __CODE_H__ */
