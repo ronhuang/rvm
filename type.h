@@ -84,6 +84,7 @@ enum {
 enum {
   M_EMPTY = 0,   /** Empty. */
   M_EA,          /** Effective address. */
+  M_Ed,          /** Register or memory (Bit32u). */
   M_EdIb,        /** Register or memory (Bit32u), followed by immediate data (Bit8u). */
   M_EbIb,        /** Register or memory (Bit8u), followed by immediate data (Bit8u). */
   M_Gd,          /** General register. */

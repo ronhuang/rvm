@@ -232,6 +232,12 @@ int rvm_cycle_step(rvm_cycle *runner) {
       else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
       break;
 
+    case M_Ed: /* ModR/M specifies a register or memory (Bit32u). */
+      /* First operand. */
+      if (mod == 0x03) op1.d = reg_32(rm); /* General register. */
+      else rvm_mem_load32u(offset, &op1.d); /* Effective address memory. */
+      break;
+
     case M_Gd: /* ModR/M specifies a register (Bit32u). */
       op1.d = reg_32(reg);
       break;

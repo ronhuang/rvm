@@ -210,7 +210,7 @@ rvm_micro rvm_micro_table[] = {
   {0            ,0          ,0      ,0      },
   {L_MODRM      ,0          ,S_Ed   ,M_Gd   ,"mov"        },
   {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
+  {L_MODRM      ,0          ,S_Gd   ,M_Ed   ,"mov"        },
   {0            ,0          ,0      ,0      },
   {L_MODRM      ,0          ,S_Gd   ,M_EA   ,"lea"        },
   {0            ,0          ,0      ,0      },
