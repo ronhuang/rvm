@@ -203,7 +203,7 @@ rvm_micro rvm_micro_table[] = {
   {0            ,0          ,0      ,0      },
   {L_MODRM      ,1          ,0      ,M_GRP  },
   {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
+  {L_MODRM      ,P_TESTd    ,0      ,M_EdGd ,"test"       },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
   /* 0x88 ~ 0x8F */

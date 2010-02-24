@@ -344,6 +344,14 @@ int rvm_cycle_step(rvm_cycle *runner) {
     op1.d = dst.d;
     break;
 
+  case P_TESTd: /* TEST (Bit32u). */
+    dst.d = op1.d & op2.d;
+    rvm_cpu_set_flag(FLAG_CF, 0);
+    rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.d & 0x80000000);
+    rvm_cpu_set_flag(FLAG_OF, 0);
+    break;
+
   case P_ADDd: /* ADD (Bit32u). */
     dst.d = op1.d + op2.d;
     rvm_cpu_set_flag(FLAG_CF, dst.d < op2.d);
