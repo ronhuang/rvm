@@ -364,7 +364,7 @@ rvm_micro rvm_micro_group_table[][8] = {
   },
   /* 1, Group 1, 0x83, Ev, Ib */
   {
-    {0      ,0          ,0      ,0          },
+    {0      ,P_ADDd     ,S_Ed   ,M_EdIb     ,"add"        },
     {0      ,0          ,0      ,0          },
     {0      ,0          ,0      ,0          },
     {0      ,0          ,0      ,0          },

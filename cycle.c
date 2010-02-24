@@ -327,7 +327,16 @@ int rvm_cycle_step(rvm_cycle *runner) {
     op1.d = dst.d;
     break;
 
-  case P_SUBd: /* Logical SUB (Bit32u). */
+  case P_ADDd: /* ADD (Bit32u). */
+    dst.d = op1.d + op2.d;
+    rvm_cpu_set_flag(FLAG_CF, dst.d < op2.d);
+    rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.d & 0x80000000);
+    rvm_cpu_set_flag(FLAG_OF, ((op1.d ^ op2.d ^ 0x80000000) & (dst.d ^ op2.d)) & 0x80000000);
+    op1.d = dst.d;
+    break;
+
+  case P_SUBd: /* SUB (Bit32u). */
     dst.d = op1.d - op2.d;
     rvm_cpu_set_flag(FLAG_CF, op1.d < op2.d);
     rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);

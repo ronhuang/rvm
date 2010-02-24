@@ -96,7 +96,8 @@ enum {
 enum {
   P_NOP = 0,     /** Skip this. */
   P_ANDd,        /** Logical AND (Bit32u). */
-  P_SUBd,        /** Logical SUB (Bit32u). */
+  P_ADDd,        /** ADD (Bit32u). */
+  P_SUBd,        /** SUB (Bit32u). */
   P_SARd,        /** Arithmetic right shift (Bit32u). */
   P_XORb,        /** Logical XOR (Bit8u). */
   P_CMPb,        /** CMP (Bit8u). */
