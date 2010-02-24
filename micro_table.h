@@ -379,7 +379,7 @@ rvm_micro rvm_micro_group_table[][8] = {
     {0      ,0          ,0      ,0          },
     {0      ,0          ,0      ,0          },
     {0      ,0          ,0      ,0          },
-    {0      ,0          ,0      ,0          },
+    {0      ,P_SHLd     ,S_Ed   ,M_EdIb     ,"shl"        },
     {0      ,0          ,0      ,0          },
     {0      ,0          ,0      ,0          },
     {0      ,P_SARd     ,S_Ed   ,M_EdIb     ,"sar"        },

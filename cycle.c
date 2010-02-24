@@ -362,6 +362,15 @@ int rvm_cycle_step(rvm_cycle *runner) {
     op1.d = dst.d;
     break;
 
+  case P_SHLd: /* Arithmetic/Logical left shift (Bit32u). */
+    dst.d = op1.d << op2.d;
+    rvm_cpu_set_flag(FLAG_CF, (op1.d >> (32 - op2.d)) & 1);
+    rvm_cpu_set_flag(FLAG_ZF, dst.d == 0);
+    rvm_cpu_set_flag(FLAG_SF, dst.d & 0x80000000);
+    rvm_cpu_set_flag(FLAG_OF, (dst.d ^ op1.d) & 0x80000000);
+    op1.d = dst.d;
+    break;
+
   case P_XORb: /* Logical XOR (Bit8u). */
     dst.d = op1.d ^ op2.d;
     rvm_cpu_set_flag(FLAG_CF, 0);

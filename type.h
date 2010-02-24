@@ -100,6 +100,7 @@ enum {
   P_ADDd,        /** ADD (Bit32u). */
   P_SUBd,        /** SUB (Bit32u). */
   P_SARd,        /** Arithmetic right shift (Bit32u). */
+  P_SHLd,        /** Arithmetic/Logical left shift (Bit32u). */
   P_XORb,        /** Logical XOR (Bit8u). */
   P_CMPb,        /** CMP (Bit8u). */
   P_INCd,        /** INC (Bit32u). */
