@@ -142,13 +142,13 @@ rvm_micro rvm_micro_table[] = {
 
   /* 0x50 ~ 0x57 */
   {L_REGd       ,0          ,S_PUSH ,REG_AX ,"push"       },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
+  {L_REGd       ,0          ,S_PUSH ,REG_CX ,"push"       },
+  {L_REGd       ,0          ,S_PUSH ,REG_DX ,"push"       },
+  {L_REGd       ,0          ,S_PUSH ,REG_BX ,"push"       },
+  {L_REGd       ,0          ,S_PUSH ,REG_SP ,"push"       },
+  {L_REGd       ,0          ,S_PUSH ,REG_BP ,"push"       },
+  {L_REGd       ,0          ,S_PUSH ,REG_SI ,"push"       },
+  {L_REGd       ,0          ,S_PUSH ,REG_DI ,"push"       },
   /* 0x58 ~ 0x5F */
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
