@@ -150,14 +150,14 @@ rvm_micro rvm_micro_table[] = {
   {L_REGd       ,0          ,S_PUSH ,REG_SI ,"push"       },
   {L_REGd       ,0          ,S_PUSH ,REG_DI ,"push"       },
   /* 0x58 ~ 0x5F */
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
+  {L_POP        ,0          ,S_REGd ,REG_AX ,"pop"        },
+  {L_POP        ,0          ,S_REGd ,REG_CX ,"pop"        },
+  {L_POP        ,0          ,S_REGd ,REG_DX ,"pop"        },
+  {L_POP        ,0          ,S_REGd ,REG_BX ,"pop"        },
+  {L_POP        ,0          ,S_REGd ,REG_SP ,"pop"        },
   {L_POP        ,0          ,S_REGd ,REG_BP ,"pop"        },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
+  {L_POP        ,0          ,S_REGd ,REG_SI ,"pop"        },
+  {L_POP        ,0          ,S_REGd ,REG_DI ,"pop"        },
 
   /* 0x60 ~ 0x67 */
   {0            ,0          ,0      ,0      },
