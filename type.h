@@ -68,6 +68,7 @@ enum {
   L_REGd,        /** Operands is register specified in table (Bit32u). */
   L_REGbIb,      /** Operands is register specified in table (Bit8u) and immediate data (Bit8u). */
   L_IMMd,        /** Operands is immediate data (Bit32u). */
+  L_IMMbs,       /** Operands is immediate data (Bit8s). */
   L_POP,         /** Operand is from stack. */
 };
 

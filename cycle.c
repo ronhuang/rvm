@@ -255,7 +255,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
     case M_EbIb: /* ModR/M specifies a register or memory (Bit8u), and has immediate data (Bit8u) following it. */
       /* Second operand. */
-      if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+      if (!rvm_code_read8u(rd, &disp8)) return FAIL;
       op2.d = disp8;
       /* First operand. */
       if (mod == 0x03) op1.d = reg_8(rm); /* General register. */
@@ -264,7 +264,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
 
     case M_EdIb: /* ModR/M specifies a register or memory (Bit32u), and has immediate data (Bit8u) following it. */
       /* Second operand. */
-      if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+      if (!rvm_code_read8u(rd, &disp8)) return FAIL;
       op2.d = disp8;
       /* First operand. */
       if (mod == 0x03) op1.d = reg_32(rm); /* General register. */
@@ -293,7 +293,7 @@ int rvm_cycle_step(rvm_cycle *runner) {
     break;
 
   case L_REGbIb: /* Operands are register (Bit8u) specified in table and an immediate data (Bit8u). */
-    if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+    if (!rvm_code_read8u(rd, &disp8)) return FAIL;
     op2.d = disp8;
     op1.d = reg_32(micro.extra);
     break;
@@ -303,8 +303,13 @@ int rvm_cycle_step(rvm_cycle *runner) {
     break;
 
   case L_IMMd: /* Operand is immediate data (Bit32u). */
-    if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+    if (!rvm_code_read32u(rd, &disp32)) return FAIL;
     op1.d = disp32;
+    break;
+
+  case L_IMMbs: /* Operand is immediate data (Bit8s). */
+    if (!rvm_code_read8s(rd, &disp8)) return FAIL;
+    op1.d = disp8;
     break;
 
   case L_NOP:
