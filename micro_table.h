@@ -264,14 +264,14 @@ rvm_micro rvm_micro_table[] = {
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
   /* 0xB8 ~ 0xBF */
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
+  {L_IMMd       ,0          ,S_REGd ,REG_AX ,"mov"        },
+  {L_IMMd       ,0          ,S_REGd ,REG_CX ,"mov"        },
+  {L_IMMd       ,0          ,S_REGd ,REG_DX ,"mov"        },
+  {L_IMMd       ,0          ,S_REGd ,REG_BX ,"mov"        },
+  {L_IMMd       ,0          ,S_REGd ,REG_SP ,"mov"        },
+  {L_IMMd       ,0          ,S_REGd ,REG_BP ,"mov"        },
+  {L_IMMd       ,0          ,S_REGd ,REG_SI ,"mov"        },
+  {L_IMMd       ,0          ,S_REGd ,REG_DI ,"mov"        },
 
   /* 0xC0 ~ 0xC7 */
   {0            ,0          ,0      ,0      },

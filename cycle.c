@@ -302,6 +302,11 @@ int rvm_cycle_step(rvm_cycle *runner) {
     if (!rvm_cpu_pop32u(&op1.d)) return FAIL;
     break;
 
+  case L_IMMd: /* Operand is immediate data (Bit32u). */
+    if (!rvm_code_read32s(rd, &disp32)) return FAIL;
+    op1.d = disp32;
+    break;
+
   case L_NOP:
     break;
 
