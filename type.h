@@ -89,6 +89,8 @@ enum {
   M_Ed,          /** Register or memory (Bit32u). */
   M_EdIb,        /** Register or memory (Bit32u), followed by immediate data (Bit8u). */
   M_EbIb,        /** Register or memory (Bit8u), followed by immediate data (Bit8u). */
+  M_EdGd,        /** ModR/M specifies a memory or register (Bit32u) and register (Bit32u). */
+  M_GdEd,        /** ModR/M specifies a register (Bit32u) and memory or register (Bit32u). */
   M_Gd,          /** General register. */
   M_GRP,         /** Opcode extension group. */
 };

@@ -47,9 +47,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 rvm_micro rvm_micro_table[] = {
   /* 0x00 ~ 0x07 */
   {0            ,0          ,0      ,0      },
+  {L_MODRM      ,P_ADDd     ,S_Ed   ,M_EdGd ,"add"        },
   {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
-  {0            ,0          ,0      ,0      },
+  {L_MODRM      ,P_ADDd     ,S_Gd   ,M_GdEd ,"add"        },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
   {0            ,0          ,0      ,0      },
